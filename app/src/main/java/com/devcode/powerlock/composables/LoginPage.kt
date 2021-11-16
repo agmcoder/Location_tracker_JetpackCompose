@@ -142,14 +142,17 @@ fun LoginPage(navController: NavController) {
                                     Toast.LENGTH_SHORT
                                 ).show()
                             } else {
-                                 var resultado = emailPasswordLogin(
+                                var resultado = emailPasswordLogin(
                                     context,
                                     emailValue.value,
                                     passwordValue.value
 
                                 )
-                                if (resultado==true){
+                                if (resultado == true) {
                                     navController.navigate("menu_page")
+                                }
+                                else{
+
                                 }
                             }
 

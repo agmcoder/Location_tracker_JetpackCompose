@@ -28,16 +28,16 @@ fun emailPasswordLogin(
     context: Context, emailValue: String,
     passwordValue: String
 ): Boolean {
-    var resultado = true
+    var result=false
     val mAuth = FirebaseAuth.getInstance()
     mAuth
         .signInWithEmailAndPassword(emailValue, passwordValue)
-        .addOnCompleteListener() { task ->
+        .addOnCompleteListener { task ->
             if (task.isSuccessful) {
                 // Sign in success, update UI with the signed-in user's information
                 Log.d(TAG, "signInWithEmail:success")
                 val user = mAuth.currentUser
-
+                result=true
             } else {
                 // If sign in fails, display a message to the user.
                 Log.w(TAG, "signInWithEmail:failure", task.exception)
@@ -46,9 +46,9 @@ fun emailPasswordLogin(
                     "Authentication failed.",
                     Toast.LENGTH_SHORT
                 ).show()
-                resultado = false
+                result = false
             }
         }
 
-    return resultado
+    return result
 }
