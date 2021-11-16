@@ -13,6 +13,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.devcode.powerlock.composables.LoginPage
 import com.devcode.powerlock.theme.SecurePhoneAppTheme
+import com.google.firebase.auth.FirebaseAuth
 import com.learnandroid.powerlock.composables.MenuPage
 import com.learnandroid.powerlock.composables.RegisterPage
 import com.learnandroid.powerlock.composables.RegisterPhonePage

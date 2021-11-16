@@ -1,5 +1,6 @@
 package com.devcode.powerlock.composables
 
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -16,6 +17,7 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.TextStyle
@@ -25,8 +27,7 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-
-
+import com.devcode.powerlock.model.emailPasswordLogin
 
 
 import com.devcode.powerlock.theme.primaryColor
@@ -37,7 +38,9 @@ import com.devcode.powerlock.theme.whiteBackground
 fun LoginPage(navController: NavController) {
 
     //val image = imageResource(id= R.drawable.logo)
-    val image= painterResource(com.devcode.powerlock.R.drawable.logo)
+    val context = LocalContext.current
+
+    val image = painterResource(com.devcode.powerlock.R.drawable.logo)
     val emailValue = remember { mutableStateOf("") }
     val passwordValue = remember { mutableStateOf("") }
 
@@ -95,7 +98,7 @@ fun LoginPage(navController: NavController) {
                         singleLine = true,
                         modifier = Modifier.fillMaxWidth(0.8f),
 
-                    )
+                        )
 
                     OutlinedTextField(
 
@@ -105,14 +108,16 @@ fun LoginPage(navController: NavController) {
                             IconButton(onClick = {
                                 passwordVisibility.value = !passwordVisibility.value
                             }) {
-                                Icon(imageVector = ImageVector.vectorResource(
-                                    id = com.devcode.powerlock.R.drawable.password_eye), contentDescription ="",
-                                    tint=if (passwordVisibility.value) primaryColor else Color.Gray
+                                Icon(
+                                    imageVector = ImageVector.vectorResource(
+                                        id = com.devcode.powerlock.R.drawable.password_eye
+                                    ), contentDescription = "",
+                                    tint = if (passwordVisibility.value) primaryColor else Color.Gray
                                 )
 
                             }
                         },
-                        label = { Text(text="Password", color = Color.Black) },
+                        label = { Text(text = "Password", color = Color.Black) },
                         placeholder = { Text(text = "Password", color = Color.Black) },
                         singleLine = true,
                         visualTransformation = if (passwordVisibility.value) VisualTransformation.None
@@ -121,14 +126,34 @@ fun LoginPage(navController: NavController) {
                             .fillMaxWidth(0.8f)
                             .focusRequester(focusRequester = focusRequester),
                         //onImeActionPerformed = { _, controller ->
-                            //controller?.hideSoftwareKeyboard()
+                        //controller?.hideSoftwareKeyboard()
                         //}
 
                     )
 
                     Spacer(modifier = Modifier.padding(10.dp))
                     Button(
-                        onClick = {},
+                        onClick = {
+                            if (emailValue.value.isEmpty() ||
+                                passwordValue.value.isEmpty()
+                            ) {
+                                Toast.makeText(
+                                    context, "campos vacios",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            } else {
+                                 var resultado = emailPasswordLogin(
+                                    context,
+                                    emailValue.value,
+                                    passwordValue.value
+
+                                )
+                                if (resultado==true){
+                                    navController.navigate("menu_page")
+                                }
+                            }
+
+                        },
                         modifier = Modifier
                             .fillMaxWidth(0.8f)
                             .height(50.dp)
