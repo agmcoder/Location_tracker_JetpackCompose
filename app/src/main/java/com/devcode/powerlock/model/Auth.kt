@@ -32,15 +32,15 @@ fun emailPasswordLogin(
     val mAuth = FirebaseAuth.getInstance()
     mAuth
         .signInWithEmailAndPassword(emailValue, passwordValue)
-        .addOnCompleteListener { task ->
-            if (task.isSuccessful) {
+        .addOnCompleteListener {
+            if (it.isSuccessful) {
                 // Sign in success, update UI with the signed-in user's information
                 Log.d(TAG, "signInWithEmail:success")
                 val user = mAuth.currentUser
                 result=true
             } else {
                 // If sign in fails, display a message to the user.
-                Log.w(TAG, "signInWithEmail:failure", task.exception)
+                Log.w(TAG, "signInWithEmail:failure", it.exception)
                 Toast.makeText(
                     context,
                     "Authentication failed.",

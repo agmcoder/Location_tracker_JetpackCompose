@@ -44,7 +44,7 @@ fun RegisterPhonePage(navController: NavController) {
 @Preview
 @Composable
 fun BodyContentRegisterPhone() {
-    val androidID= getAndroidId(LocalContext.current)
+    val androidID = getAndroidId(LocalContext.current)
     var userEmail = ""
     //FirebaseApp.initializeApp(ContextAmbient.current)
     val user = Firebase.auth.currentUser
@@ -168,9 +168,11 @@ fun BodyContentRegisterPhone() {
                             modifier = Modifier
                                 .padding(10.dp)
                                 .clip(RoundedCornerShape(20.dp))
-                                .fillMaxWidth(),
-
-                            onClick = { /*TODO*/ }) {
+                                .fillMaxWidth()
+                                .align(alignment = Alignment.Center),
+                            onClick = { /*TODO*/ })
+                        {
+                            Text(text = "GUARDAR")
 
                         }
                     }
@@ -190,6 +192,7 @@ fun Divisor() {
     Spacer(modifier = Modifier.padding(top = 5.dp))
 
 }
+
 fun getAndroidId(context: Context): String? {
     return Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID)
 }
