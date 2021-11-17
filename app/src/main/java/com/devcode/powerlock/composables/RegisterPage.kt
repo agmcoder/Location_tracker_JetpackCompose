@@ -30,6 +30,7 @@ import com.devcode.powerlock.theme.primaryColor
 import com.devcode.powerlock.theme.whiteBackground
 import com.google.firebase.auth.FirebaseAuth
 
+
 @Composable
 fun RegisterPage(navController: NavController) {
 
@@ -42,26 +43,32 @@ fun RegisterPage(navController: NavController) {
     val confirmPasswordValue = remember { mutableStateOf("") }
 
     val context = LocalContext.current
-    val scrollState= rememberScrollState()
+    val scrollState = rememberScrollState()
 
     val passwordVisibility = remember { mutableStateOf(false) }
     val confirmPasswordVisibility = remember { mutableStateOf(false) }
 
-    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.BottomCenter) {
+    Box(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.BottomCenter
+    ) {
         Box(
             modifier = Modifier
                 .fillMaxSize()
                 .background(Color.White),
             contentAlignment = Alignment.TopCenter
         ) {
-            Image(painter = painterResource(id = R.drawable.firebase), contentDescription = "")
+            Image(
+                painter = image,
+                contentDescription = ""
+            )
         }
 
 
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .verticalScroll(state=scrollState)
+                .verticalScroll(state = scrollState)
                 .fillMaxHeight(0.70f)
                 .clip(RoundedCornerShape(topStart = 30.dp, topEnd = 30.dp))
                 .background(whiteBackground)
@@ -108,12 +115,12 @@ fun RegisterPage(navController: NavController) {
                             IconButton(onClick = {
                                 passwordVisibility.value = !passwordVisibility.value
                             }) {
-                                Icon(
-                                    imageVector = ImageVector.vectorResource(id = R.drawable.password_eye),
-                                    contentDescription = "",
+                                Icon(imageVector = ImageVector.vectorResource(id = R.drawable.password_eye),
+                                    contentDescription ="" ,
                                     tint = if (passwordVisibility.value) primaryColor else Color.Gray
-
                                 )
+
+
 
                             }
                         },
@@ -132,11 +139,12 @@ fun RegisterPage(navController: NavController) {
                             IconButton(onClick = {
                                 confirmPasswordVisibility.value = !confirmPasswordVisibility.value
                             }) {
-                                Icon(
-                                    imageVector = ImageVector.vectorResource(id = R.drawable.password_eye),
+                                Icon(imageVector = ImageVector.vectorResource(id = R.drawable.password_eye),
                                     contentDescription = "",
                                     tint = if (confirmPasswordVisibility.value) primaryColor else Color.Gray
+
                                 )
+
 
                             }
                         },
@@ -158,7 +166,8 @@ fun RegisterPage(navController: NavController) {
 
                             } else {
                                 FirebaseAuth.getInstance().createUserWithEmailAndPassword(
-                                    emailValue.value.toString(), passwordValue.value.toString())
+                                    emailValue.value.toString(), passwordValue.value.toString()
+                                )
                                     .addOnCompleteListener { task ->
                                         if (task.isSuccessful) {
                                             // Sign in success, update UI with the signed-in user's information
@@ -166,8 +175,10 @@ fun RegisterPage(navController: NavController) {
 
                                         } else {
                                             // If sign in fails, display a message to the user.
-                                            Toast.makeText(context, "Authentication failed.",
-                                                Toast.LENGTH_SHORT).show()
+                                            Toast.makeText(
+                                                context, "Authentication failed.",
+                                                Toast.LENGTH_SHORT
+                                            ).show()
                                         }
                                     }
                             }
