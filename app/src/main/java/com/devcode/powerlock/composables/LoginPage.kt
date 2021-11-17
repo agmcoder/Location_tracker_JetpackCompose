@@ -1,10 +1,14 @@
 package com.devcode.powerlock.composables
 
+import android.content.ContentValues
+import android.util.Log
+import android.util.Log.i
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
@@ -27,11 +31,14 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.devcode.powerlock.R
 import com.devcode.powerlock.model.emailPasswordLogin
 
 
 import com.devcode.powerlock.theme.primaryColor
 import com.devcode.powerlock.theme.whiteBackground
+import com.google.firebase.auth.FirebaseAuth
+import java.util.logging.Logger
 
 
 @Composable
@@ -48,31 +55,42 @@ fun LoginPage(navController: NavController) {
     val focusRequester = remember { FocusRequester() }
 
     Box(
-        modifier = Modifier.fillMaxSize(), contentAlignment =
+
+        modifier = Modifier
+            .fillMaxSize(),
+        contentAlignment =
         Alignment.BottomCenter
     ) {
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(Color.White), contentAlignment =
-            Alignment.TopCenter
-        ) {
-
-            Image(painter = image, contentDescription = "")
-        }
-
         Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center,
-            modifier = Modifier
-                .fillMaxWidth()
-                .fillMaxHeight(0.60f)
-                .clip(RoundedCornerShape(topStart = 30.dp, topEnd = 30.dp))
-                .background(whiteBackground)
-                .padding(10.dp)
+            modifier = Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally
         ) {
 
-            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+
+            Box(
+                modifier = Modifier
+                    .fillMaxHeight(0.3f)
+                    .background(Color.White), contentAlignment =
+                Alignment.Center
+
+            ) {
+
+                Image(painter = image, contentDescription ="",
+                alignment = Alignment.Center)
+
+            }
+
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .fillMaxHeight(0.70f)
+                    .clip(RoundedCornerShape(topEnd = 30.dp, topStart = 30.dp))
+                    .background(whiteBackground)
+                    .padding(10.dp)
+            ) {
+
+
                 Text(
                     text = "Sign In",
                     style = TextStyle(
@@ -83,6 +101,10 @@ fun LoginPage(navController: NavController) {
                     //fontSize = TextUnit.Companion.Sp(30)
                 )
                 Spacer(modifier = Modifier.padding(20.dp))
+
+
+
+
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
                     OutlinedTextField(
 
@@ -99,90 +121,118 @@ fun LoginPage(navController: NavController) {
                         modifier = Modifier.fillMaxWidth(0.8f),
 
                         )
-
-                    OutlinedTextField(
-
-                        value = passwordValue.value,
-                        onValueChange = { passwordValue.value = it },
-                        trailingIcon = {
-                            IconButton(onClick = {
-                                passwordVisibility.value = !passwordVisibility.value
-                            }) {
-                                Icon(
-                                    imageVector = ImageVector.vectorResource(
-                                        id = com.devcode.powerlock.R.drawable.password_eye
-                                    ), contentDescription = "",
-                                    tint = if (passwordVisibility.value) primaryColor else Color.Gray
-                                )
-
-                            }
-                        },
-                        label = { Text(text = "Password", color = Color.Black) },
-                        placeholder = { Text(text = "Password", color = Color.Black) },
-                        singleLine = true,
-                        visualTransformation = if (passwordVisibility.value) VisualTransformation.None
-                        else PasswordVisualTransformation(),
-                        modifier = Modifier
-                            .fillMaxWidth(0.8f)
-                            .focusRequester(focusRequester = focusRequester),
-                        //onImeActionPerformed = { _, controller ->
-                        //controller?.hideSoftwareKeyboard()
-                        //}
-
-                    )
-
-                    Spacer(modifier = Modifier.padding(10.dp))
-                    Button(
-                        onClick = {
-                            if (emailValue.value.isEmpty() ||
-                                passwordValue.value.isEmpty()
-                            ) {
-                                Toast.makeText(
-                                    context, "campos vacios",
-                                    Toast.LENGTH_SHORT
-                                ).show()
-                            } else {
-                                var resultado = emailPasswordLogin(
-                                    context,
-                                    emailValue.value,
-                                    passwordValue.value
-
-                                )
-                                if (resultado == true) {
-                                    navController.navigate("menu_page")
-                                }
-                                else{
-
-                                }
-                            }
-
-                        },
-                        modifier = Modifier
-                            .fillMaxWidth(0.8f)
-                            .height(50.dp)
-                    ) {
-                        Text(text = "Sign In", fontSize = 20.sp)
-                    }
-
-                    Spacer(modifier = Modifier.padding(20.dp))
-                    Text(
-                        text = "Create An Account",
-                        modifier = Modifier.clickable(onClick = {
-                            navController.navigate("register_page") {
-                                //popUpTo = navController.graph.startDestination
-                                //launchSingleTop = true
-                            }
-                        })
-                    )
-                    Spacer(modifier = Modifier.padding(20.dp))
                 }
 
 
-            }
-        }
 
+                OutlinedTextField(
+
+                    value = passwordValue.value,
+                    onValueChange = { passwordValue.value = it },
+                    trailingIcon = {
+                        IconButton(onClick = {
+                            passwordVisibility.value = !passwordVisibility.value
+                        }) {
+
+                            Icon(imageVector = ImageVector.vectorResource(
+                                id =R.drawable.password_eye ),
+                                contentDescription = "",
+                                tint = if (passwordVisibility.value)
+                                    primaryColor else Color.Gray
+
+                            )
+
+                        }
+                    },
+                    label = { Text(text = "Password", color = Color.Black) },
+                    placeholder = { Text(text = "Password", color = Color.Black) },
+                    singleLine = true,
+                    visualTransformation = if (passwordVisibility.value) VisualTransformation.None
+                    else PasswordVisualTransformation(),
+                    modifier = Modifier
+                        .fillMaxWidth(0.8f)
+                        .focusRequester(focusRequester = focusRequester),
+                    //onImeActionPerformed = { _, controller ->
+                    //controller?.hideSoftwareKeyboard()
+                    //}
+
+                )
+
+
+
+                Spacer(modifier = Modifier.padding(10.dp))
+                Button(
+                    onClick = {
+                        if (emailValue.value.isEmpty() ||
+                            passwordValue.value.isEmpty()
+                        ) {
+                            Toast.makeText(
+                                context, "campos vacios",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        } else {
+                            com.orhanobut.logger.Logger.i("else del boton signup")
+                            var userMail: String = emailValue.value.toString()
+                            var userPassword: String = passwordValue.value.toString()
+                            val mAuth = FirebaseAuth.getInstance()
+                            mAuth
+                                .signInWithEmailAndPassword(userMail, userPassword)
+                                .addOnCompleteListener { task ->
+                                    if (task.isSuccessful) {
+                                        com.orhanobut.logger.Logger.i("if task issuccesfull")
+                                        // Sign in success, update UI with the signed-in user's information
+                                        Log.d(ContentValues.TAG, "signInWithEmail:success")
+                                        navController.navigate("menu_page")
+                                    } else {
+                                        com.orhanobut.logger.Logger.i("else is susccessful")
+                                        // If sign in fails, display a message to the user.
+                                        Log.w(
+                                            ContentValues.TAG,
+                                            "signInWithEmail:failure",
+                                            task.exception
+                                        )
+                                        Toast.makeText(
+                                            context,
+                                            "Authentication failed.",
+                                            Toast.LENGTH_SHORT
+                                        ).show()
+                                    }
+                                }
+
+                        }
+
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth(0.8f)
+                        .height(50.dp)
+                ) {
+                    Text(text = "Sign In", fontSize = 20.sp)
+                }
+
+
+                Spacer(modifier = Modifier.padding(20.dp))
+
+
+                Text(
+                    text = "Create An Account",
+                    modifier = Modifier.clickable(onClick = {
+                        navController.navigate("register_page") {
+                            //popUpTo = navController.graph.startDestination
+                            //launchSingleTop = true
+                        }
+                    })
+                )
+
+
+                Spacer(modifier = Modifier.padding(200.dp))
+
+
+            }
+
+        }
     }
 }
+
 
 
 
