@@ -1,9 +1,8 @@
 package com.learnandroid.powerlock.composables
 
 import android.widget.Toast
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.*
+import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
@@ -29,6 +28,7 @@ import com.devcode.powerlock.R
 import com.devcode.powerlock.model.emailPasswordRegister
 import com.devcode.powerlock.theme.primaryColor
 import com.devcode.powerlock.theme.whiteBackground
+import com.google.firebase.auth.FirebaseAuth
 
 @Composable
 fun RegisterPage(navController: NavController) {
@@ -42,6 +42,7 @@ fun RegisterPage(navController: NavController) {
     val confirmPasswordValue = remember { mutableStateOf("") }
 
     val context = LocalContext.current
+    val scrollState= rememberScrollState()
 
     val passwordVisibility = remember { mutableStateOf(false) }
     val confirmPasswordVisibility = remember { mutableStateOf(false) }
@@ -60,6 +61,7 @@ fun RegisterPage(navController: NavController) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
+                .verticalScroll(state=scrollState)
                 .fillMaxHeight(0.70f)
                 .clip(RoundedCornerShape(topStart = 30.dp, topEnd = 30.dp))
                 .background(whiteBackground)
@@ -155,17 +157,19 @@ fun RegisterPage(navController: NavController) {
                                 ).show()
 
                             } else {
-                                val resultado = emailPasswordRegister(
-                                    emailValue = emailValue.value,
-                                    passwordValue = passwordValue.value
-                                )
-                                if (resultado == true) {
-                                    navController.navigate("register_phone")
-                                } else {
-                                    Toast.makeText(
-                                        context, "User Error", Toast.LENGTH_SHORT
-                                    ).show()
-                                }
+                                FirebaseAuth.getInstance().createUserWithEmailAndPassword(
+                                    emailValue.value.toString(), passwordValue.value.toString())
+                                    .addOnCompleteListener { task ->
+                                        if (task.isSuccessful) {
+                                            // Sign in success, update UI with the signed-in user's information
+                                            navController.navigate("register_phone")
+
+                                        } else {
+                                            // If sign in fails, display a message to the user.
+                                            Toast.makeText(context, "Authentication failed.",
+                                                Toast.LENGTH_SHORT).show()
+                                        }
+                                    }
                             }
                         }, modifier = Modifier
                             .fillMaxWidth(0.8f)

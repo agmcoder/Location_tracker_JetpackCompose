@@ -1,10 +1,13 @@
 package com.learnandroid.powerlock.composables
 
+import android.content.Context
+import android.provider.Settings
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.Button
 import androidx.compose.material.Divider
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
@@ -13,6 +16,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -40,6 +44,7 @@ fun RegisterPhonePage(navController: NavController) {
 @Preview
 @Composable
 fun BodyContentRegisterPhone() {
+    val androidID= getAndroidId(LocalContext.current)
     var userEmail = ""
     //FirebaseApp.initializeApp(ContextAmbient.current)
     val user = Firebase.auth.currentUser
@@ -143,18 +148,31 @@ fun BodyContentRegisterPhone() {
 
 
                             Row(modifier = Modifier.fillMaxWidth()) {
-                                Text(
+                                if (androidID != null) {
+                                    Text(
 
-                                    color = Color.Black,
-                                    text = "",
-                                    fontSize = 25.sp,
-                                    modifier = Modifier.padding(20.dp)
-                                )
+                                        color = Color.Black,
+                                        text = androidID,
+                                        fontSize = 25.sp,
+                                        modifier = Modifier.padding(20.dp)
+                                    )
+                                }
                             }
 
 
                         }
                         Divisor()
+                    }
+                    item {
+                        Button(
+                            modifier = Modifier
+                                .padding(10.dp)
+                                .clip(RoundedCornerShape(20.dp))
+                                .fillMaxWidth(),
+
+                            onClick = { /*TODO*/ }) {
+
+                        }
                     }
 
 
@@ -171,6 +189,9 @@ fun Divisor() {
     Divider(color = Color.Black, thickness = 1.dp)
     Spacer(modifier = Modifier.padding(top = 5.dp))
 
+}
+fun getAndroidId(context: Context): String? {
+    return Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID)
 }
 
 

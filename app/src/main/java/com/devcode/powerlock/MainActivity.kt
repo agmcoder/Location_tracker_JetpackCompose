@@ -17,12 +17,16 @@ import com.google.firebase.auth.FirebaseAuth
 import com.learnandroid.powerlock.composables.MenuPage
 import com.learnandroid.powerlock.composables.RegisterPage
 import com.learnandroid.powerlock.composables.RegisterPhonePage
+import com.orhanobut.logger.AndroidLogAdapter
+import com.orhanobut.logger.Logger
+
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             SecurePhoneAppTheme {
+                Logger.addLogAdapter(AndroidLogAdapter())
                 Nav()
             }
         }
