@@ -26,9 +26,11 @@ import androidx.navigation.NavController
 import com.devcode.powerlock.R
 import com.devcode.powerlock.composables.Toolbar
 import com.devcode.powerlock.model.getDb
-import com.devcode.powerlock.model.getDeviceLocation
+import com.devcode.powerlock.model.getDeviceLatitud
+import com.devcode.powerlock.model.getDeviceLongitud
 import com.devcode.powerlock.theme.whiteBackground
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.orhanobut.logger.Logger
 
@@ -174,22 +176,33 @@ fun BodyContentRegisterPhone(navController: NavController) {
                                 .fillMaxWidth()
                                 .align(alignment = Alignment.Center),
                             onClick = {
-                                val db= getDb()
-                                var geo= getDeviceLocation(context)
+                                Logger.d("entrando en boton guardar device")
+                                Logger.d("db getDb")
+
+
+                                Logger.d("getLocation")
+                                var longitud= getDeviceLongitud(context)
+                                Logger.d("lon[]")
+                                var latitud= getDeviceLatitud(context)
+                                Logger.d("latitud[0]")
+                                Logger.d("getdevicelocation ")
                                 val device= hashMapOf(
                                     "user" to userEmail,
                                     "id_android" to androidID,
-                                    "coordenadas" to geo
+                                    "lat" to latitud,
+                                    "lon" to longitud
+
 
                                 )
-                                db.collection("devices")
+                                Logger.d("val device hasmapof")
+                                Firebase.firestore.collection("devices")
                                     .add(device)
                                     .addOnSuccessListener {
-                                        Logger.d("device añadido a coleccion con id: $it")
+                                        Logger.d("device añadido a coleccion con id: ")
                                         navController.navigate("menu_page")
                                     }
                                     .addOnFailureListener{
-                                        Logger.w("error añadiendo documento device",it)
+                                        Logger.d("error añadiendo documento device  ")
                                         navController.navigate("register_page")
                                     }
 

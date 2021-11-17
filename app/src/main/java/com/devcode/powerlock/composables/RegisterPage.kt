@@ -178,21 +178,20 @@ fun RegisterPage(navController: NavController) {
 
                                 } else {
                                     FirebaseAuth.getInstance().createUserWithEmailAndPassword(
-                                        emailValue.value.toString(), passwordValue.value.toString()
-                                    )
-                                        .addOnCompleteListener { task ->
-                                            if (task.isSuccessful) {
-                                                // Sign in success, update UI with the signed-in user's information
-                                                navController.navigate("register_phone")
+                                        emailValue.value, passwordValue.value
+                                    ).addOnCompleteListener {
+                                        if (it.isSuccessful) {
+                                            // Sign in success, update UI with the signed-in user's information
+                                            navController.navigate("register_phone")
 
-                                            } else {
-                                                // If sign in fails, display a message to the user.
-                                                Toast.makeText(
-                                                    context, "Authentication failed.",
-                                                    Toast.LENGTH_SHORT
-                                                ).show()
-                                            }
+                                        } else {
+                                            // If sign in fails, display a message to the user.
+                                            Toast.makeText(
+                                                context, "Authentication failed.",
+                                                Toast.LENGTH_SHORT
+                                            ).show()
                                         }
+                                    }
                                 }
                             }, modifier = Modifier
                                 .fillMaxWidth(0.8f)

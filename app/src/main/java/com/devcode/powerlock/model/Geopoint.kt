@@ -19,10 +19,10 @@ class Geopoint{
 
 
 }
-fun getDeviceLocation(context: Context): Array<String> {
+fun getDeviceLongitud(context: Context):String{
     val fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(context)
 
-    var coordenadas=arrayOf<String>()
+    var longitud=""
 
     try {
         val locationResult = fusedLocationProviderClient.lastLocation
@@ -30,10 +30,9 @@ fun getDeviceLocation(context: Context): Array<String> {
             if (task.isSuccessful) {
                 val lastKnownLocation = task.result
                 if (lastKnownLocation != null) {
-                    coordenadas = (arrayOf(
-                        lastKnownLocation.latitude.toString(),
+                    longitud =
                         lastKnownLocation.longitude.toString()
-                    ))
+
 
 
 
@@ -47,7 +46,36 @@ fun getDeviceLocation(context: Context): Array<String> {
     } catch (e: SecurityException) {
         Logger.d("exception ", e)
     }
-    return coordenadas
+    return longitud
+}
+fun getDeviceLatitud(context: Context):String {
+    val fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(context)
+
+    var latitud=""
+
+    try {
+        val locationResult = fusedLocationProviderClient.lastLocation
+        locationResult.addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                val lastKnownLocation = task.result
+                if (lastKnownLocation != null) {
+                    latitud =
+                        lastKnownLocation.latitude.toString()
+
+
+
+
+                }
+            } else {
+                Logger.d("exception", " current user location is null")
+            }
+
+        }
+
+    } catch (e: SecurityException) {
+        Logger.d("exception ", e)
+    }
+    return latitud
 
 }
 
