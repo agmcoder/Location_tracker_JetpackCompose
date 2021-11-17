@@ -25,6 +25,8 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.devcode.powerlock.R
 import com.devcode.powerlock.composables.Toolbar
+import com.devcode.powerlock.model.getDb
+import com.devcode.powerlock.model.getDeviceLocation
 import com.devcode.powerlock.theme.whiteBackground
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
@@ -35,17 +37,18 @@ import com.orhanobut.logger.Logger
 fun RegisterPhonePage(navController: NavController) {
     Scaffold(
         topBar = { Toolbar(title = "Registro de dispositivo") },
-        content = { BodyContentRegisterPhone() }
+        content = { BodyContentRegisterPhone(navController) }
 
     )
 
 }
 
-@Preview
+
 @Composable
-fun BodyContentRegisterPhone() {
+fun BodyContentRegisterPhone(navController: NavController) {
     val androidID = getAndroidId(LocalContext.current)
     var userEmail = ""
+    val context= LocalContext.current
     //FirebaseApp.initializeApp(ContextAmbient.current)
     val user = Firebase.auth.currentUser
     user?.let {
@@ -170,7 +173,28 @@ fun BodyContentRegisterPhone() {
                                 .clip(RoundedCornerShape(20.dp))
                                 .fillMaxWidth()
                                 .align(alignment = Alignment.Center),
-                            onClick = { /*TODO*/ })
+                            onClick = {
+                                val db= getDb()
+                                var geo= getDeviceLocation(context)
+                                val device= hashMapOf(
+                                    "user" to userEmail,
+                                    "id_android" to androidID,
+                                    "coordenadas" to geo
+
+                                )
+                                db.collection("devices")
+                                    .add(device)
+                                    .addOnSuccessListener {
+                                        Logger.d("device añadido a coleccion con id: $it")
+                                        navController.navigate("menu_page")
+                                    }
+                                    .addOnFailureListener{
+                                        Logger.w("error añadiendo documento device",it)
+                                        navController.navigate("register_page")
+                                    }
+
+
+                            })
                         {
                             Text(text = "GUARDAR")
 

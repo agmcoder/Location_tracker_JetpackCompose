@@ -1,19 +1,17 @@
 package com.devcode.powerlock
 
+import android.location.Location
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
+import androidx.activity.viewModels
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.devcode.powerlock.composables.LoginPage
 import com.devcode.powerlock.theme.SecurePhoneAppTheme
-import com.google.firebase.auth.FirebaseAuth
+import com.google.android.gms.location.LocationServices
 import com.learnandroid.powerlock.composables.MenuPage
 import com.learnandroid.powerlock.composables.RegisterPage
 import com.learnandroid.powerlock.composables.RegisterPhonePage
@@ -31,6 +29,8 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
+
+
     @Composable
     fun Nav() {
         val navController = rememberNavController()
@@ -44,5 +44,7 @@ class MainActivity : ComponentActivity() {
                 content = { RegisterPhonePage(navController = navController) })
         })
     }
+
+
 }
 
