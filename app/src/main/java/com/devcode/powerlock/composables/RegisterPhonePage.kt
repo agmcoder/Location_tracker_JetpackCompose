@@ -195,16 +195,19 @@ fun BodyContentRegisterPhone(navController: NavController) {
 
                                 )
                                 Logger.d("val device hasmapof")
-                                Firebase.firestore.collection("devices")
-                                    .add(device)
-                                    .addOnSuccessListener {
-                                        Logger.d("device añadido a coleccion con id: ")
-                                        navController.navigate("menu_page")
-                                    }
-                                    .addOnFailureListener{
-                                        Logger.d("error añadiendo documento device  ")
-                                        navController.navigate("register_page")
-                                    }
+                                if (androidID != null) {
+                                    Firebase.firestore.collection("devices")
+                                        .document(androidID)
+                                        .set(device)
+                                        .addOnSuccessListener {
+                                            Logger.d("device añadido a coleccion con id: ")
+                                            navController.navigate("menu_page")
+                                        }
+                                        .addOnFailureListener{
+                                            Logger.d("error añadiendo documento device  ")
+                                            navController.navigate("register_page")
+                                        }
+                                }
 
 
                             })
