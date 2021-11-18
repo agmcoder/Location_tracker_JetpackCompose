@@ -7,8 +7,9 @@ import androidx.compose.material.Scaffold
 import androidx.compose.material.Switch
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -20,96 +21,84 @@ import com.devcode.powerlock.composables.Toolbar
 import com.devcode.powerlock.theme.whiteBackground
 
 
-@Composable
-fun MenuPage(navController: NavController) {
-    Scaffold(
-        topBar = { Toolbar("Menu PowerLock") },
-        content = { BodyContentMenu() }
-    )
-
+@Composable()
+fun MenuPage(navController : NavController) {
+	ScaffoldItem()
 
 }
 
-@Preview
+@Preview(name="scaffold preview")
+@Composable
+fun ScaffoldItem() {
+	Scaffold(
+		topBar = { Toolbar("Menu PowerLock") },
+		content = { BodyContentMenu() }
+	)
+}
+
+@Preview(name="bodyContent")
 @Composable
 fun BodyContentMenu() {
-    val checkedStateGps = remember { mutableStateOf(true) }
-    val checkedStatePowerMenu = remember { mutableStateOf(true) }
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(whiteBackground)
-    )
-    {
-        LazyColumn() {
-            item {
-                Spacer(modifier = Modifier.height(50.dp))
-            }
-            item {
+	val checkedStateGps = rememberSaveable { mutableStateOf(false) }
+	val checkedStatePowerMenu = rememberSaveable { mutableStateOf(false) }
+	Box(
+		modifier = Modifier
+			.fillMaxSize()
+			.background(whiteBackground)
+	)
+	{
+		LazyColumn {
+			item {
+				Spacer(modifier = Modifier.height(50.dp))
+			}
+			item {
+				SwitchOptionItem(
+					text = "localización GPS",
+					checkedValue = checkedStateGps
+				)
 
-                Row {
-                    Box(
-                        modifier =
-                        Modifier.fillMaxWidth(0.8f)
-                    )
-                    {
-                        Text(
-                            color = Color.Black,
-                            text = "Localización GPS",
-                            fontSize = 30.sp,
-                            modifier = Modifier.padding(20.dp)
-                        )
+			}
+			item {
+				SwitchOptionItem(
+					text = "Bloqueo Power Menu",
+					checkedValue = checkedStatePowerMenu
+				)
+			}
+		}
+	}
+}
 
+@Composable
+fun SwitchOptionItem(text : String, checkedValue : MutableState<Boolean>) {
+	Row {
+		Box(
+			modifier =
+			Modifier.fillMaxWidth(0.8f)
+		)
+		{
+			Text(
+				color = Color.Black,
+				text = text,
+				fontSize = 30.sp,
+				modifier = Modifier.padding(20.dp)
+			)
 
-                    }
-                    Box(
-                        modifier =
-                        Modifier.fillMaxSize(),
-                        contentAlignment = Alignment.CenterEnd
-                    ) {
-                        Switch(
-                            checked = checkedStateGps.value,
-                            onCheckedChange = { checkedStateGps.value = it },
-                            modifier = Modifier
-                                //.fillMaxSize()
-                                .padding(20.dp)
+		}
+		Box(
+			modifier =
+			Modifier.fillMaxSize(),
+			contentAlignment = Alignment.CenterEnd
+		) {
+			Switch(
+				checked = checkedValue.value,
+				onCheckedChange = { checkedValue.value = it },
+				modifier = Modifier
+					//.fillMaxSize()
+					.padding(20.dp)
 
-                        )
-                    }
-                }
-
-            }
-            item {
-                Row {
-                    Box(modifier = Modifier.fillMaxWidth(0.8f)) {
-                        Text(
-                            text = "Bloqueo Power Menu",
-                            fontSize = 30.sp,
-                            modifier = Modifier.padding(20.dp),
-                            color = Color.Black
-
-
-                        )
-                    }
-                    Box(contentAlignment = Alignment.CenterEnd) {
-
-
-                        Switch(
-                            checked = checkedStatePowerMenu.value,
-                            onCheckedChange = { checkedStatePowerMenu.value = it },
-                            modifier = Modifier
-                                //.fillMaxSize()
-                                .padding(20.dp)
-                        )
-                    }
-                }
-
-            }
-        }
-
-
-    }
-
+			)
+		}
+	}
 
 }
 

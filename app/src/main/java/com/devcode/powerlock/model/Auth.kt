@@ -4,23 +4,31 @@ import android.content.ContentValues.TAG
 import android.content.Context
 import android.util.Log
 import android.widget.Toast
+import androidx.navigation.NavController
 import com.google.firebase.auth.FirebaseAuth
 
 fun emailPasswordRegister(
+    context: Context,
+    navController: NavController,
     emailValue: String,
-    passwordValue: String
-): Boolean {
-    var resultado = true
-    FirebaseAuth.getInstance().createUserWithEmailAndPassword(
-        emailValue,
-        passwordValue
-    ).addOnCompleteListener {
-        if (!it.isSuccessful) {
-            resultado = false
-        }
+    passwordValue: String,
 
+) {
+    FirebaseAuth.getInstance().createUserWithEmailAndPassword(
+        emailValue, passwordValue
+    ).addOnCompleteListener {
+        if (it.isSuccessful) {
+            // Sign in success, update UI with the signed-in user's information
+            navController.navigate("register_phone")
+
+        } else {
+            // If sign in fails, display a message to the user.
+            Toast.makeText(
+                context, "Authentication failed.",
+                Toast.LENGTH_SHORT
+            ).show()
+        }
     }
-    return resultado
 
 }
 

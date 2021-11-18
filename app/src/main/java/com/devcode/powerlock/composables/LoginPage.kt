@@ -158,7 +158,9 @@ fun LoginPage(navController: NavController) {
                     OutlinedTextField(
 
                         value = passwordValue.value,
-
+                        keyboardOptions = KeyboardOptions(
+                            keyboardType = KeyboardType.Password
+                        ),
                         keyboardActions = KeyboardActions(),
                         onValueChange = { passwordValue.value = it },
                         trailingIcon = {
@@ -172,7 +174,7 @@ fun LoginPage(navController: NavController) {
                                     ),
                                     contentDescription = "",
                                     tint = if (passwordVisibility.value)
-                                        primaryColor else Color.Gray
+                                        primaryColor else Color.Black
 
                                 )
 
@@ -207,8 +209,8 @@ fun LoginPage(navController: NavController) {
                                 ).show()
                             } else {
                                 com.orhanobut.logger.Logger.i("else del boton signup")
-                                var userMail: String = emailValue.value.toString()
-                                var userPassword: String = passwordValue.value.toString()
+                                var userMail: String = emailValue.value
+                                var userPassword: String = passwordValue.value
                                 val mAuth = FirebaseAuth.getInstance()
                                 mAuth
                                     .signInWithEmailAndPassword(userMail, userPassword)

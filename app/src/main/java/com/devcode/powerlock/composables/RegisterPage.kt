@@ -4,6 +4,7 @@ import android.widget.Toast
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
@@ -20,12 +21,14 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.devcode.powerlock.R
+import com.devcode.powerlock.model.emailPasswordRegister
 import com.devcode.powerlock.theme.primaryColor
 import com.google.firebase.auth.FirebaseAuth
 
@@ -101,6 +104,9 @@ fun RegisterPage(navController: NavController) {
 
                         OutlinedTextField(
                             value = emailValue.value,
+                            keyboardOptions = KeyboardOptions(
+                                keyboardType = KeyboardType.Email
+                            ),
                             onValueChange = { emailValue.value = it },
                             label = { Text(text = "Email Address", color = Color.Black) },
                             placeholder = { Text(text = "Email Address", color = Color.Black) },
@@ -115,6 +121,9 @@ fun RegisterPage(navController: NavController) {
                         OutlinedTextField(
                             value = passwordValue.value,
                             onValueChange = { passwordValue.value = it },
+                            keyboardOptions = KeyboardOptions(
+                                keyboardType = KeyboardType.Password
+                            ),
                             label = { Text(text = "Password", color = Color.Black) },
                             placeholder = { Text(text = "Password", color = Color.Black) },
                             singleLine = true,
@@ -128,7 +137,7 @@ fun RegisterPage(navController: NavController) {
                                     Icon(
                                         imageVector = ImageVector.vectorResource(id = R.drawable.password_eye),
                                         contentDescription = "",
-                                        tint = if (passwordVisibility.value) primaryColor else Color.Gray
+                                        tint = if (passwordVisibility.value) primaryColor else Color.Black
                                     )
 
 
@@ -141,6 +150,9 @@ fun RegisterPage(navController: NavController) {
                         OutlinedTextField(
                             value = confirmPasswordValue.value,
                             onValueChange = { confirmPasswordValue.value = it },
+                            keyboardOptions = KeyboardOptions(
+                                keyboardType = KeyboardType.Password
+                            ),
                             label = { Text(text = "Confirm Password", color = Color.Black) },
                             placeholder = { Text(text = "Confirm Password", color = Color.Black) },
                             singleLine = true,
@@ -177,21 +189,13 @@ fun RegisterPage(navController: NavController) {
                                     ).show()
 
                                 } else {
-                                    FirebaseAuth.getInstance().createUserWithEmailAndPassword(
-                                        emailValue.value, passwordValue.value
-                                    ).addOnCompleteListener {
-                                        if (it.isSuccessful) {
-                                            // Sign in success, update UI with the signed-in user's information
-                                            navController.navigate("register_phone")
+                                    emailPasswordRegister(
+                                        context,
+                                        navController,
+                                        emailValue.value,
+                                        passwordValue.value
+                                    )
 
-                                        } else {
-                                            // If sign in fails, display a message to the user.
-                                            Toast.makeText(
-                                                context, "Authentication failed.",
-                                                Toast.LENGTH_SHORT
-                                            ).show()
-                                        }
-                                    }
                                 }
                             }, modifier = Modifier
                                 .fillMaxWidth(0.8f)
