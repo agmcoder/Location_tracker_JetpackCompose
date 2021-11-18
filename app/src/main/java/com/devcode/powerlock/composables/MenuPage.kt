@@ -9,7 +9,10 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -27,7 +30,7 @@ fun MenuPage(navController: NavController) {
 
 }
 
-
+@Preview
 @Composable
 fun BodyContentMenu() {
     val checkedStateGps = remember { mutableStateOf(true) }
@@ -43,40 +46,62 @@ fun BodyContentMenu() {
                 Spacer(modifier = Modifier.height(50.dp))
             }
             item {
+
                 Row {
-                    Text(
-                        "Localización GPS",
-                        fontSize = 30.sp,
-                        modifier = Modifier.padding(20.dp)
-
+                    Box(
+                        modifier =
+                        Modifier.fillMaxWidth(0.8f)
                     )
-                    Switch(
-                        checked = checkedStateGps.value,
-                        onCheckedChange = { checkedStateGps.value = it },
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(20.dp)
+                    {
+                        Text(
+                            color = Color.Black,
+                            text = "Localización GPS",
+                            fontSize = 30.sp,
+                            modifier = Modifier.padding(20.dp)
+                        )
 
-                    )
+
+                    }
+                    Box(
+                        modifier =
+                        Modifier.fillMaxSize(),
+                        contentAlignment = Alignment.CenterEnd
+                    ) {
+                        Switch(
+                            checked = checkedStateGps.value,
+                            onCheckedChange = { checkedStateGps.value = it },
+                            modifier = Modifier
+                                //.fillMaxSize()
+                                .padding(20.dp)
+
+                        )
+                    }
                 }
 
             }
             item {
                 Row {
-                    Text(
-                        "Bloqueo Power Menu",
-                        fontSize = 30.sp,
-                        modifier = Modifier.padding(20.dp)
+                    Box(modifier = Modifier.fillMaxWidth(0.8f)) {
+                        Text(
+                            text = "Bloqueo Power Menu",
+                            fontSize = 30.sp,
+                            modifier = Modifier.padding(20.dp),
+                            color = Color.Black
 
-                    )
-                    Switch(
-                        checked = checkedStatePowerMenu.value,
-                        onCheckedChange = { checkedStatePowerMenu.value = it },
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(20.dp)
 
-                    )
+                        )
+                    }
+                    Box(contentAlignment = Alignment.CenterEnd) {
+
+
+                        Switch(
+                            checked = checkedStatePowerMenu.value,
+                            onCheckedChange = { checkedStatePowerMenu.value = it },
+                            modifier = Modifier
+                                //.fillMaxSize()
+                                .padding(20.dp)
+                        )
+                    }
                 }
 
             }
