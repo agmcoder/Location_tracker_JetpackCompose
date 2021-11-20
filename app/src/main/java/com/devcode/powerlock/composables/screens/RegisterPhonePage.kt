@@ -1,4 +1,4 @@
-package com.learnandroid.powerlock.composables
+package com.devcode.powerlock.composables.screens
 
 import android.content.Context
 import android.provider.Settings
@@ -19,13 +19,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.devcode.powerlock.R
 import com.devcode.powerlock.composables.Toolbar
-import com.devcode.powerlock.model.getDb
 import com.devcode.powerlock.model.getDeviceLatitud
 import com.devcode.powerlock.model.getDeviceLongitud
 import com.devcode.powerlock.theme.whiteBackground
