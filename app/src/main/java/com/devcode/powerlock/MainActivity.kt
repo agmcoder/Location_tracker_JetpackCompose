@@ -11,7 +11,7 @@ import androidx.navigation.compose.rememberNavController
 import com.devcode.powerlock.composables.LoginPage
 import com.devcode.powerlock.composables.MapPage
 import com.devcode.powerlock.theme.SecurePhoneAppTheme
-import com.devcode.powerlock.composables.MenuPage
+import com.devcode.powerlock.composables.screens.MenuPage
 import com.devcode.powerlock.navigation.NavigationHost
 import com.learnandroid.powerlock.composables.RegisterPage
 import com.devcode.powerlock.composables.screens.RegisterPhonePage

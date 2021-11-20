@@ -1,25 +1,18 @@
-package com.devcode.powerlock.composables
+package com.devcode.powerlock.composables.screens
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
-import com.devcode.powerlock.composables.screens.Menu
-import com.devcode.powerlock.navigation.NavigationBottomBarHost
+import com.devcode.powerlock.composables.BottomBar
+import com.devcode.powerlock.composables.Toolbar
 import com.devcode.powerlock.navigation.getListDestination
-import com.devcode.powerlock.theme.whiteBackground
 
 
 @Composable()
@@ -34,12 +27,37 @@ fun ScaffoldItem(navController: NavController) {
 
     Scaffold(
         topBar = { Toolbar("Menu PowerLock") },
-        bottomBar = { Button(onClick = {navController.navigate("map_page")}) {
-            
-        } },
-        content = { Menu(navController = navController)}
+        bottomBar = {
+            ButtonBottomBar(navController = navController)
+
+        },
+        content = { Menu(navController = navController) }
     )
 
+}
+
+@Composable
+fun ButtonBottomBar(navController: NavController) {
+    Row() {
+        Button(
+            modifier = Modifier
+                .fillMaxWidth(0.5f)
+                .padding(5.dp)
+                .clip(RoundedCornerShape(5.dp)),
+            onClick = { navController.navigate("map_page") }) {
+            Text(text = "MAP")
+        }
+        Button(
+            modifier = Modifier
+
+                .fillMaxWidth(1F)
+                .padding(5.dp)
+                .clip(RoundedCornerShape(5.dp)),
+            onClick = {}
+        ) {
+            Text(text = "otra opcion")
+        }
+    }
 }
 
 @Composable
@@ -51,6 +69,8 @@ fun NavBottomBar(navController: NavController) {
 
 
 }
+
+
 
 
 
