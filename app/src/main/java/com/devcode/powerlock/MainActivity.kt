@@ -29,24 +29,6 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
-
-
-
-
-
 }
-@Composable
-fun Nav() {
-    val navController:NavHostController = rememberNavController()
 
-    NavHost(navController = navController, startDestination = "login_page", builder = {
-        composable("login_page", content = { LoginPage(navController = navController) })
-        composable("register_page", content = { RegisterPage(navController = navController) })
-        composable("menu_page", content = { MenuPage(navController = navController) })
-        composable(
-            "register_phone",
-            content = { RegisterPhonePage(navController = navController) })
-        composable("map_page",content={ MapPage(navController=navController) })
-    })
-}
 

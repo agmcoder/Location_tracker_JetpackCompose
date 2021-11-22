@@ -23,6 +23,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.devcode.powerlock.R
+import com.devcode.powerlock.composables.Divisor
 import com.devcode.powerlock.composables.Toolbar
 import com.devcode.powerlock.model.getDeviceLatitud
 import com.devcode.powerlock.model.getDeviceLongitud
@@ -59,7 +60,7 @@ fun BodyContentRegisterPhone(navController: NavController) {
 
 
     if (user != null) {
-        Logger.d("usuario actual " + user)
+        Logger.d("usuario actual $user")
     } else {
         Logger.e("usuario nulo en current user")
     }
@@ -223,13 +224,7 @@ fun BodyContentRegisterPhone(navController: NavController) {
 }
 
 
-@Composable
-fun Divisor() {
-    Spacer(modifier = Modifier.padding(top = 5.dp))
-    Divider(color = Color.Black, thickness = 1.dp)
-    Spacer(modifier = Modifier.padding(top = 5.dp))
 
-}
 
 fun getAndroidId(context: Context): String? {
     return Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID)
