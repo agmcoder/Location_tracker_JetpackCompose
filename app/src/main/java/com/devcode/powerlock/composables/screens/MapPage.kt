@@ -1,4 +1,4 @@
-package com.devcode.powerlock.composables
+package com.devcode.powerlock.composables.screens
 
 import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable

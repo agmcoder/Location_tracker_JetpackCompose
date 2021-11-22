@@ -5,7 +5,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.devcode.powerlock.composables.LoginPage
-import com.devcode.powerlock.composables.MapPage
+import com.devcode.powerlock.composables.screens.MapPage
 import com.devcode.powerlock.composables.screens.MenuPage
 import com.learnandroid.powerlock.composables.RegisterPage
 import com.devcode.powerlock.composables.screens.RegisterPhonePage
@@ -21,7 +21,7 @@ fun NavigationHost() {
         composable(
             "register_phone",
             content = { RegisterPhonePage(navController = navController) })
-        composable("map_page", content = { MapPage(navController = navController)})
+        composable("map_page", content = { MapPage(navController = navController) })
 
     })
     
