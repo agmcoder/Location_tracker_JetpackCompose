@@ -25,6 +25,7 @@ import androidx.navigation.NavController
 import com.devcode.powerlock.R
 import com.devcode.powerlock.composables.Divisor
 import com.devcode.powerlock.composables.Toolbar
+import com.devcode.powerlock.model.getAndroidId
 import com.devcode.powerlock.model.getDeviceLatitud
 import com.devcode.powerlock.model.getDeviceLongitud
 import com.devcode.powerlock.theme.whiteBackground
@@ -176,8 +177,6 @@ fun BodyContentRegisterPhone(navController: NavController) {
                                 .align(alignment = Alignment.Center),
                             onClick = {
                                 Logger.d("entrando en boton guardar device")
-                                Logger.d("db getDb")
-
 
                                 Logger.d("getLocation")
                                 var longitud= getDeviceLongitud(context)
@@ -226,9 +225,7 @@ fun BodyContentRegisterPhone(navController: NavController) {
 
 
 
-fun getAndroidId(context: Context): String? {
-    return Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID)
-}
+
 
 
 
