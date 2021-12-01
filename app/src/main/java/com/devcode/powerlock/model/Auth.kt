@@ -2,11 +2,15 @@ package com.devcode.powerlock.model
 
 import android.content.ContentValues.TAG
 import android.content.Context
+import android.provider.Settings
 import android.util.Log
 import android.widget.Toast
 import androidx.navigation.NavController
 import com.google.firebase.auth.FirebaseAuth
 
+fun getAndroidId(context: Context): String? {
+    return Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID)
+}
 fun emailPasswordRegister(
     context: Context,
     navController: NavController,

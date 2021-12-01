@@ -1,6 +1,5 @@
 package com.devcode.powerlock.composables.screens
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.provider.Settings
 import androidx.compose.foundation.Image
@@ -9,6 +8,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
+import androidx.compose.material.Divider
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -18,7 +18,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -26,7 +25,8 @@ import androidx.navigation.NavController
 import com.devcode.powerlock.R
 import com.devcode.powerlock.composables.Divisor
 import com.devcode.powerlock.composables.Toolbar
-
+import com.devcode.powerlock.model.getDeviceLatitud
+import com.devcode.powerlock.model.getDeviceLongitud
 import com.devcode.powerlock.theme.whiteBackground
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
@@ -49,12 +49,13 @@ fun RegisterPhonePage(navController: NavController) {
 fun BodyContentRegisterPhone(navController: NavController) {
     val androidID = getAndroidId(LocalContext.current)
     var userEmail = ""
+    val context= LocalContext.current
     //FirebaseApp.initializeApp(ContextAmbient.current)
     val user = Firebase.auth.currentUser
     user?.let {
         userEmail = user.email.toString()
         val uid = user.uid
-        Logger.d("uid: $uid")
+        Logger.d("uid: " + uid.toString())
     }
 
 
@@ -69,7 +70,7 @@ fun BodyContentRegisterPhone(navController: NavController) {
             .background(whiteBackground)
     )
     {
-        Column {
+        Column() {
 
 
             Box(
@@ -174,10 +175,21 @@ fun BodyContentRegisterPhone(navController: NavController) {
                                 .fillMaxWidth()
                                 .align(alignment = Alignment.Center),
                             onClick = {
+                                Logger.d("entrando en boton guardar device")
+                                Logger.d("db getDb")
 
+
+                                Logger.d("getLocation")
+                                var longitud= getDeviceLongitud(context)
+                                Logger.d("lon[]")
+                                var latitud= getDeviceLatitud(context)
+                                Logger.d("latitud[0]")
+                                Logger.d("getdevicelocation ")
                                 val device= hashMapOf(
                                     "user" to userEmail,
-                                    "id_android" to androidID
+                                    "id_android" to androidID,
+                                    "lat" to latitud,
+                                    "lon" to longitud
 
 
                                 )
@@ -199,7 +211,7 @@ fun BodyContentRegisterPhone(navController: NavController) {
 
                             })
                         {
-                            Text(text = stringResource(R.string.btnSave))
+                            Text(text = "GUARDAR")
 
                         }
                     }
@@ -214,10 +226,8 @@ fun BodyContentRegisterPhone(navController: NavController) {
 
 
 
-
-@SuppressLint("HardwareIds")
 fun getAndroidId(context: Context): String? {
-    return Settings.Secure.getString(context.contentResolver, Settings.Secure.ANDROID_ID)
+    return Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID)
 }
 
 
