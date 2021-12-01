@@ -9,13 +9,15 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import androidx.navigation.NavHostController
+import com.devcode.powerlock.R
 import com.devcode.powerlock.composables.components.SwitchOptionItem
 import com.devcode.powerlock.theme.whiteBackground
+import com.orhanobut.logger.Logger
 
 @Composable
 fun Menu(navController: NavController) {
@@ -24,23 +26,23 @@ fun Menu(navController: NavController) {
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(whiteBackground)
+            .background(whiteBackground),
+        contentAlignment = Alignment.Center,
+
+
     )
     {
         LazyColumn {
             item {
-                Spacer(modifier = Modifier.height(50.dp))
-            }
-            item {
                 SwitchOptionItem(
-                    text = "localización GPS",
+                    text = stringResource(R.string.location_gps),
                     checkedValue = checkedStateGps
                 )
 
             }
             item {
                 SwitchOptionItem(
-                    text = "Bloqueo Power Menu",
+                    text = stringResource(R.string.block_power_menu),
                     checkedValue = checkedStatePowerMenu
                 )
             }

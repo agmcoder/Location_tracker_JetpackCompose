@@ -1,3 +1,6 @@
 <resources>
     <string name="app_name">powerlock</string>
+    <string name="btnSave">GUARDAR</string>
+    <string name="block_power_menu">Bloqueo Power Menu</string>
+    <string name="location_gps">localización GPS</string>
 </resources>
