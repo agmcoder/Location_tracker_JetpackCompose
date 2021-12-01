@@ -44,7 +44,7 @@ fun SwitchOptionItem(text: String, checkedValue: MutableState<Boolean>) {
                     checkedThumbColor = Color(0xFF00CC99),
                     checkedTrackColor = Color(0xFF7BB661),
                     uncheckedThumbColor = Color(0xFF83010B),
-                    uncheckedTrackColor = Color(0xFFBB4C4C)
+                    uncheckedTrackColor = Color(0xFFBB4C4C)//color of switches
                 )
 
             )
