@@ -18,6 +18,11 @@ import com.devcode.powerlock.composables.screens.RegisterPhonePage
 import com.orhanobut.logger.AndroidLogAdapter
 import com.orhanobut.logger.Logger
 
+import android.content.SharedPreferences
+
+
+
+
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -25,9 +30,12 @@ class MainActivity : ComponentActivity() {
         setContent {
             SecurePhoneAppTheme {
                 Logger.addLogAdapter(AndroidLogAdapter())
-                NavigationHost()
+                NavigationHost(getSharedPreferences("mispreferencias", MODE_PRIVATE))
             }
         }
+
+
+
     }
 }
 

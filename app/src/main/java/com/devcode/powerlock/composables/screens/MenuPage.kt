@@ -1,5 +1,6 @@
 package com.devcode.powerlock.composables.screens
 
+import android.content.SharedPreferences
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
@@ -16,14 +17,14 @@ import com.devcode.powerlock.navigation.getListDestination
 
 
 @Composable()
-fun MenuPage(navController: NavController) {
+fun MenuPage(navController: NavController, sharedPreferences : SharedPreferences) {
 
-    ScaffoldItem(navController)
+    ScaffoldItem(navController, sharedPreferences)
 
 }
 
 @Composable
-fun ScaffoldItem(navController: NavController) {
+fun ScaffoldItem(navController: NavController, sharedPreferences : SharedPreferences) {
 
     Scaffold(
         topBar = { Toolbar("Menu PowerLock") },
@@ -31,7 +32,7 @@ fun ScaffoldItem(navController: NavController) {
             ButtonBottomBar(navController = navController)
 
         },
-        content = { Menu(navController = navController) }
+        content = { Menu(navController = navController, sharedPreferences) }
     )
 
 }

@@ -7,7 +7,7 @@ import androidx.navigation.compose.rememberNavController
 import com.devcode.powerlock.composables.screens.MapPage
 import com.devcode.powerlock.composables.screens.Menu
 
-@Composable
+/*@Composable
 fun NavigationBottomBarHost() {
     val navController= rememberNavController()
     NavHost(navController = navController, startDestination = "menu",builder= {
@@ -15,4 +15,4 @@ fun NavigationBottomBarHost() {
         composable("menu", content = { Menu(navController = navController) })
     })
 
-}
+}*/
