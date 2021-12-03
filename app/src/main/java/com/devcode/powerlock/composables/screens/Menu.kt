@@ -27,10 +27,14 @@ import androidx.navigation.NavController
 import com.devcode.powerlock.R
 import com.devcode.powerlock.composables.components.SwitchOptionItem
 import com.devcode.powerlock.theme.whiteBackground
-import com.orhanobut.logger.Logger
+import com.google.accompanist.permissions.*
 
+@ExperimentalPermissionsApi
 @Composable
 fun Menu(navController: NavController, sharedPreferences : SharedPreferences) {
+
+
+
 
     val initialValueGPS = sharedPreferences.getBoolean("gps", false)
     val initialValuePowerMenu = sharedPreferences.getBoolean("power", false)
@@ -38,7 +42,25 @@ fun Menu(navController: NavController, sharedPreferences : SharedPreferences) {
     val checkedStateGps = rememberSaveable { mutableStateOf(initialValueGPS) }
     val checkedStatePowerMenu = rememberSaveable { mutableStateOf(initialValuePowerMenu) }
 
-    val ed : SharedPreferences.Editor = sharedPreferences.edit()
+	val permisoGPSFineInicial = ActivityCompat.checkSelfPermission(
+		LocalContext.current,
+		Manifest.permission.ACCESS_FINE_LOCATION
+	) == PackageManager.PERMISSION_GRANTED
+
+	val permisoGPSCoarseInicial = ActivityCompat.checkSelfPermission(
+		LocalContext.current,
+		Manifest.permission.ACCESS_COARSE_LOCATION
+	) == PackageManager.PERMISSION_GRANTED
+
+	var permisoGPSFine = rememberSaveable {
+		mutableStateOf(permisoGPSFineInicial)
+	}
+
+	var permisoGPSCoarse = rememberSaveable {
+		mutableStateOf(permisoGPSCoarseInicial)
+	}
+
+	val ed : SharedPreferences.Editor = sharedPreferences.edit()
 
     val locationManager: LocationManager =
         LocalContext.current.getSystemService(LOCATION_SERVICE) as LocationManager
@@ -46,6 +68,7 @@ fun Menu(navController: NavController, sharedPreferences : SharedPreferences) {
 // getting GPS status
     val isGPSEnabled = locationManager
         .isProviderEnabled(LocationManager.GPS_PROVIDER);
+
 
     // getting network status
     val isNetworkEnabled = locationManager
@@ -56,6 +79,8 @@ fun Menu(navController: NavController, sharedPreferences : SharedPreferences) {
 
     var location: Location?
 
+
+
     val gpsListener = object: LocationListener {
         override fun onLocationChanged(location : Location) {
             TODO("Not yet implemented")
@@ -64,55 +89,49 @@ fun Menu(navController: NavController, sharedPreferences : SharedPreferences) {
     }
 
 
-    if (isGPSEnabled || isNetworkEnabled) {
-
-        if (isGPSEnabled) {
-
-					  if (ActivityCompat.checkSelfPermission(
-							  LocalContext.current,
-							  Manifest.permission.ACCESS_FINE_LOCATION
-						  ) != PackageManager.PERMISSION_GRANTED
-					  ) {
-
-					      if (ActivityCompat.checkSelfPermission(
-                              LocalContext.current,
-                              Manifest.permission.ACCESS_COARSE_LOCATION
-                          ) != PackageManager.PERMISSION_GRANTED){
-                              // TODO: Consider calling
-                              //    ActivityCompat#requestPermissions
-                              // here to request the missing permissions, and then overriding
-                              //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                              //                                          int[] grantResults)
-                              // to handle the case where the user grants the permission. See the documentation
-                              // for ActivityCompat#requestPermissions for more details.
-                              return
-                          }
-					  }
-
-					  locationManager.requestLocationUpdates(
-							  LocationManager.GPS_PROVIDER,
-							  MIN_TIME_BW_UPDATES.toLong(),
-							  MIN_DISTANCE_CHANGE_FOR_UPDATES.toFloat(), gpsListener)
-						  Log.d("GPS Enabled", "GPS Enabled")
-						  if (locationManager != null) {
-							  location = locationManager
-								  .getLastKnownLocation(LocationManager.GPS_PROVIDER)
-							  if (location != null) {
-								  val latitude = location.getLatitude();
-								  val longitude = location.getLongitude();
-								  Log.i("GPS", "Ubicacion $latitude $longitude")
-							  }
-						  }
 
 
-            }
 
-    }
+	val multiPermisos = rememberMultiplePermissionsState(listOf(android.Manifest.permission.ACCESS_FINE_LOCATION,android.Manifest.permission.ACCESS_COARSE_LOCATION ))
+
+
+	PermissionsRequired(
+		multiplePermissionsState = multiPermisos,
+		permissionsNotGrantedContent = { /*TODO*/ },
+		permissionsNotAvailableContent = { /*TODO*/ }) {
+		
+	}
+
+
+	when{
+		multiPermisos.allPermissionsGranted -> {
+			locationManager.requestLocationUpdates(
+				LocationManager.GPS_PROVIDER,
+				MIN_TIME_BW_UPDATES.toLong(),
+				MIN_DISTANCE_CHANGE_FOR_UPDATES.toFloat(), gpsListener)
+
+			Log.d("GPS Enabled", "GPS Enabled")
+			if (locationManager != null) {
+				location = locationManager
+					.getLastKnownLocation(LocationManager.GPS_PROVIDER)
+				if (location != null) {
+					val latitude = location.getLatitude();
+					val longitude = location.getLongitude();
+					Log.i("GPS", "Ubicacion $latitude $longitude")
+				}
+			}
+		}
+		else -> {
+
+
+		}
+
+	}
 
     Box(
         modifier = Modifier
-            .fillMaxSize()
-            .background(whiteBackground),
+	        .fillMaxSize()
+	        .background(whiteBackground),
         contentAlignment = Alignment.Center,
 
 
@@ -143,3 +162,4 @@ fun Menu(navController: NavController, sharedPreferences : SharedPreferences) {
         }
     }
 }
+

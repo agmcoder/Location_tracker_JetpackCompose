@@ -14,8 +14,9 @@ import androidx.navigation.NavController
 import com.devcode.powerlock.composables.BottomBar
 import com.devcode.powerlock.composables.Toolbar
 import com.devcode.powerlock.navigation.getListDestination
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
 
-
+@ExperimentalPermissionsApi
 @Composable()
 fun MenuPage(navController: NavController, sharedPreferences : SharedPreferences) {
 
@@ -23,6 +24,7 @@ fun MenuPage(navController: NavController, sharedPreferences : SharedPreferences
 
 }
 
+@ExperimentalPermissionsApi
 @Composable
 fun ScaffoldItem(navController: NavController, sharedPreferences : SharedPreferences) {
 

@@ -19,12 +19,10 @@ import com.orhanobut.logger.AndroidLogAdapter
 import com.orhanobut.logger.Logger
 
 import android.content.SharedPreferences
-
-
-
-
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
 
 class MainActivity : ComponentActivity() {
+    @ExperimentalPermissionsApi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {

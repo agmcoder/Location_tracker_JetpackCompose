@@ -10,7 +10,9 @@ import com.devcode.powerlock.composables.screens.MapPage
 import com.devcode.powerlock.composables.screens.MenuPage
 import com.learnandroid.powerlock.composables.RegisterPage
 import com.devcode.powerlock.composables.screens.RegisterPhonePage
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
 
+@ExperimentalPermissionsApi
 @Composable
 fun NavigationHost(sharedPreference: SharedPreferences) {
     val navController = rememberNavController()
