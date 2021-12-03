@@ -7,12 +7,11 @@ import android.content.pm.PackageManager
 import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
-import android.util.Log
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
@@ -21,26 +20,23 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import androidx.core.app.ActivityCompat
 import androidx.navigation.NavController
 import com.devcode.powerlock.R
 import com.devcode.powerlock.composables.components.SwitchOptionItem
+import com.devcode.powerlock.model.GPSPermission
 import com.devcode.powerlock.theme.whiteBackground
-import com.google.accompanist.permissions.*
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
 
 @ExperimentalPermissionsApi
 @Composable
-fun Menu(navController: NavController, sharedPreferences : SharedPreferences) {
+fun Menu(navController : NavController, sharedPreferences : SharedPreferences) {
+	val context= LocalContext.current
+	val initialValueGPS = sharedPreferences.getBoolean("gps", false)
+	val initialValuePowerMenu = sharedPreferences.getBoolean("power", false)
 
-
-
-
-    val initialValueGPS = sharedPreferences.getBoolean("gps", false)
-    val initialValuePowerMenu = sharedPreferences.getBoolean("power", false)
-
-    val checkedStateGps = rememberSaveable { mutableStateOf(initialValueGPS) }
-    val checkedStatePowerMenu = rememberSaveable { mutableStateOf(initialValuePowerMenu) }
+	val checkedStateGps = rememberSaveable { mutableStateOf(initialValueGPS) }
+	val checkedStatePowerMenu = rememberSaveable { mutableStateOf(initialValuePowerMenu) }
 
 	val permisoGPSFineInicial = ActivityCompat.checkSelfPermission(
 		LocalContext.current,
@@ -62,37 +58,39 @@ fun Menu(navController: NavController, sharedPreferences : SharedPreferences) {
 
 	val ed : SharedPreferences.Editor = sharedPreferences.edit()
 
-    val locationManager: LocationManager =
-        LocalContext.current.getSystemService(LOCATION_SERVICE) as LocationManager
+	val locationManager : LocationManager =
+		LocalContext.current.getSystemService(LOCATION_SERVICE) as LocationManager
 
 // getting GPS status
-    val isGPSEnabled = locationManager
-        .isProviderEnabled(LocationManager.GPS_PROVIDER);
+	val isGPSEnabled = locationManager
+		.isProviderEnabled(LocationManager.GPS_PROVIDER);
 
+	// getting network status
+	val isNetworkEnabled = locationManager
+		.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
 
-    // getting network status
-    val isNetworkEnabled = locationManager
-        .isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+	val MIN_TIME_BW_UPDATES = 1000 * 60 * 5
+	val MIN_DISTANCE_CHANGE_FOR_UPDATES = 10
 
-    val MIN_TIME_BW_UPDATES = 1000 * 60 * 5
-    val MIN_DISTANCE_CHANGE_FOR_UPDATES = 10
+	var location : Location?
 
-    var location: Location?
+	val gpsListener = object : LocationListener {
+		override fun onLocationChanged(location : Location) {
+			TODO("Not yet implemented")
+		}
 
+	}
+	val launcher = rememberLauncherForActivityResult(
+		ActivityResultContracts.RequestPermission()
+	) { isGranted : Boolean ->
+		if (isGranted) {
+			// Permission Accepted
+		} else {
+			// Permission Denied
+		}
+	}
 
-
-    val gpsListener = object: LocationListener {
-        override fun onLocationChanged(location : Location) {
-            TODO("Not yet implemented")
-        }
-
-    }
-
-
-
-
-
-	val multiPermisos = rememberMultiplePermissionsState(listOf(android.Manifest.permission.ACCESS_FINE_LOCATION,android.Manifest.permission.ACCESS_COARSE_LOCATION ))
+/*val multiPermisos = rememberMultiplePermissionsState(listOf(android.Manifest.permission.ACCESS_FINE_LOCATION,android.Manifest.permission.ACCESS_COARSE_LOCATION ))
 
 
 	PermissionsRequired(
@@ -126,40 +124,40 @@ fun Menu(navController: NavController, sharedPreferences : SharedPreferences) {
 
 		}
 
+	}*/
+
+	Box(
+		modifier = Modifier
+			.fillMaxSize()
+			.background(whiteBackground),
+		contentAlignment = Alignment.Center,
+
+		)
+	{
+
+		if (checkedStateGps.value) {
+			GPSPermission()
+
+		}
+
+		ed.putBoolean("gps", checkedStateGps.value)
+		ed.putBoolean("power", checkedStatePowerMenu.value)
+		ed.commit()
+		LazyColumn {
+			item {
+				SwitchOptionItem(
+					text = stringResource(R.string.location_gps),
+					checkedValue = checkedStateGps
+				)
+
+			}
+			item {
+				SwitchOptionItem(
+					text = stringResource(R.string.block_power_menu),
+					checkedValue = checkedStatePowerMenu
+				)
+			}
+		}
 	}
-
-    Box(
-        modifier = Modifier
-	        .fillMaxSize()
-	        .background(whiteBackground),
-        contentAlignment = Alignment.Center,
-
-
-    )
-    {
-
-        if(checkedStateGps.value) {
-
-        }
-
-        ed.putBoolean("gps", checkedStateGps.value)
-        ed.putBoolean("power", checkedStatePowerMenu.value)
-        ed.commit()
-        LazyColumn {
-            item {
-                SwitchOptionItem(
-                    text = stringResource(R.string.location_gps),
-                    checkedValue = checkedStateGps
-                )
-
-            }
-            item {
-                SwitchOptionItem(
-                    text = stringResource(R.string.block_power_menu),
-                    checkedValue = checkedStatePowerMenu
-                )
-            }
-        }
-    }
 }
 
