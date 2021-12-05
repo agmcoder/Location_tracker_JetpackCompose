@@ -29,10 +29,18 @@ import androidx.navigation.NavController
 import com.devcode.powerlock.R
 import com.devcode.powerlock.theme.whiteBackground
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.rememberPermissionState
 
 @ExperimentalPermissionsApi
 @Composable
 fun Menu(navController: NavController, sharedPreferences: SharedPreferences) {
+    val fineLocationState =
+        rememberPermissionState(permission = Manifest.permission.ACCESS_FINE_LOCATION)
+    val coarseLocationState =
+        rememberPermissionState(permission = Manifest.permission.ACCESS_COARSE_LOCATION)
+    val backgroundLocationState =
+        rememberPermissionState(permission = Manifest.permission.ACCESS_BACKGROUND_LOCATION)
+
 
     val context = LocalContext.current
     val initialValueGPS = sharedPreferences.getBoolean("gps", false)
@@ -123,7 +131,7 @@ fun Menu(navController: NavController, sharedPreferences: SharedPreferences) {
 		}
 
 	}*/
-    if (checkedStateGps.value){
+    if (checkedStateGps.value) {
 
     }
 
@@ -164,10 +172,15 @@ fun Menu(navController: NavController, sharedPreferences: SharedPreferences) {
                     ) {
                         Switch(
                             checked = checkedStateGps.value,
-                            onCheckedChange = { checkedStateGps.value = it },
+                            onCheckedChange = {
+                                checkedStateGps.value = it
+                                fineLocationState.launchPermissionRequest()
+                                backgroundLocationState.launchPermissionRequest()
+                                coarseLocationState.launchPermissionRequest()
+                            },
                             modifier = Modifier
                                 .padding(20.dp),
-                            colors= SwitchDefaults.colors(
+                            colors = SwitchDefaults.colors(
                                 //color of switches
                                 checkedThumbColor = Color(0xFF00CC99),
                                 checkedTrackColor = Color(0xFF7BB661),
@@ -206,7 +219,7 @@ fun Menu(navController: NavController, sharedPreferences: SharedPreferences) {
                             onCheckedChange = { checkedStatePowerMenu.value = it },
                             modifier = Modifier
                                 .padding(20.dp),
-                            colors= SwitchDefaults.colors(
+                            colors = SwitchDefaults.colors(
                                 //color of switches
                                 checkedThumbColor = Color(0xFF00CC99),
                                 checkedTrackColor = Color(0xFF7BB661),
