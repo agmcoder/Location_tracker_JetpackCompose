@@ -7,10 +7,13 @@ import android.content.pm.PackageManager
 import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
+import android.os.Build
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material.Button
 import androidx.compose.material.Switch
 import androidx.compose.material.SwitchDefaults
 import androidx.compose.material.Text
@@ -29,17 +32,27 @@ import androidx.navigation.NavController
 import com.devcode.powerlock.R
 import com.devcode.powerlock.theme.whiteBackground
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import com.google.accompanist.permissions.rememberPermissionState
+import com.orhanobut.logger.Logger
 
+@RequiresApi(Build.VERSION_CODES.Q)
 @ExperimentalPermissionsApi
 @Composable
 fun Menu(navController: NavController, sharedPreferences: SharedPreferences) {
-    val fineLocationState =
-        rememberPermissionState(permission = Manifest.permission.ACCESS_FINE_LOCATION)
-    val coarseLocationState =
-        rememberPermissionState(permission = Manifest.permission.ACCESS_COARSE_LOCATION)
-    val backgroundLocationState =
-        rememberPermissionState(permission = Manifest.permission.ACCESS_BACKGROUND_LOCATION)
+    val finepermissionState = rememberPermissionState(
+        permission =
+        Manifest.permission.ACCESS_FINE_LOCATION
+    )
+    val gpsMultiplePermissionsState =
+        rememberMultiplePermissionsState(
+            permissions = listOf(
+                Manifest.permission.ACCESS_FINE_LOCATION,
+                Manifest.permission.ACCESS_COARSE_LOCATION,
+                Manifest.permission.ACCESS_BACKGROUND_LOCATION
+            )
+
+        )
 
 
     val context = LocalContext.current
@@ -172,11 +185,12 @@ fun Menu(navController: NavController, sharedPreferences: SharedPreferences) {
                     ) {
                         Switch(
                             checked = checkedStateGps.value,
-                            onCheckedChange = {
+                            onCheckedChange =
+                            {
                                 checkedStateGps.value = it
-                                fineLocationState.launchPermissionRequest()
-                                backgroundLocationState.launchPermissionRequest()
-                                coarseLocationState.launchPermissionRequest()
+                                if (it) {
+                                    finepermissionState.launchPermissionRequest()
+                                }
                             },
                             modifier = Modifier
                                 .padding(20.dp),
@@ -193,6 +207,14 @@ fun Menu(navController: NavController, sharedPreferences: SharedPreferences) {
                 }
 
 
+            }
+            item {
+                Button(onClick = {
+                    Logger.d("launch multiplepermissionreuqest")
+                    gpsMultiplePermissionsState.launchMultiplePermissionRequest()
+                }) {
+
+                }
             }
             item {
                 Row {
