@@ -48,11 +48,9 @@ fun Menu(navController: NavController, sharedPreferences: SharedPreferences) {
     val gpsMultiplePermissionsState =
         rememberMultiplePermissionsState(
             permissions = listOf(
-                Manifest.permission.ACCESS_FINE_LOCATION,
                 Manifest.permission.ACCESS_COARSE_LOCATION,
-                Manifest.permission.ACCESS_BACKGROUND_LOCATION
+                Manifest.permission.ACCESS_FINE_LOCATION
             )
-
         )
 
 
@@ -185,7 +183,8 @@ fun Menu(navController: NavController, sharedPreferences: SharedPreferences) {
                             {
                                 checkedStateGps.value = it
                                 if (it) {
-                                    finePermissionState.launchPermissionRequest()
+                                    Logger.d("gpsmultiplestate.launch $it")
+                                    gpsMultiplePermissionsState.launchMultiplePermissionRequest()
                                 }
                             },
                             modifier = Modifier
