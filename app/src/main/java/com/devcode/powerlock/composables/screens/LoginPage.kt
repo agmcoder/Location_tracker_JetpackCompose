@@ -41,6 +41,7 @@ import com.devcode.powerlock.theme.primaryColor
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberPermissionState
 import com.google.firebase.auth.FirebaseAuth
+import com.orhanobut.logger.Logger
 
 
 @ExperimentalPermissionsApi
@@ -49,9 +50,6 @@ import com.google.firebase.auth.FirebaseAuth
 fun LoginPage(navController: NavController) {
     val (emailRequest,passwordRequest)=FocusRequester.createRefs()
 
-    val coarsePermissionState= rememberPermissionState(permission =
-    Manifest.permission.ACCESS_COARSE_LOCATION
-    )
     //val image = imageResource(id= R.drawable.logo)
     val context = LocalContext.current
     val focusManager = LocalFocusManager.current
@@ -225,10 +223,9 @@ fun LoginPage(navController: NavController) {
                                     .addOnCompleteListener { task ->
                                         if (task.isSuccessful) {
 
-                                            coarsePermissionState.launchPermissionRequest()
-                                            com.orhanobut.logger.Logger.i("if task issuccesfull")
+
                                             // Sign in success, update UI with the signed-in user's information
-                                            Log.d(ContentValues.TAG, "signInWithEmail:success")
+                                            Logger.d(ContentValues.TAG, "signInWithEmail:success")
                                             navController.navigate("menu_page")
                                         } else {
                                             com.orhanobut.logger.Logger.i("else is susccessful")

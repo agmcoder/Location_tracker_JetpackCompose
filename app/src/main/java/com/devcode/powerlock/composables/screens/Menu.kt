@@ -32,6 +32,7 @@ import androidx.navigation.NavController
 import com.devcode.powerlock.R
 import com.devcode.powerlock.theme.whiteBackground
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.PermissionRequired
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import com.google.accompanist.permissions.rememberPermissionState
 import com.orhanobut.logger.Logger
@@ -40,7 +41,7 @@ import com.orhanobut.logger.Logger
 @ExperimentalPermissionsApi
 @Composable
 fun Menu(navController: NavController, sharedPreferences: SharedPreferences) {
-
+    var doNotShowRationale = rememberSaveable { mutableStateOf(false) }
     val finePermissionState = rememberPermissionState(
         permission =
         Manifest.permission.ACCESS_FINE_LOCATION
@@ -103,7 +104,6 @@ fun Menu(navController: NavController, sharedPreferences: SharedPreferences) {
         }
 
     }
-
 
 
 /*val multiPermisos = rememberMultiplePermissionsState(listOf(android.Manifest.permission.ACCESS_FINE_LOCATION,android.Manifest.permission.ACCESS_COARSE_LOCATION ))
@@ -184,7 +184,62 @@ fun Menu(navController: NavController, sharedPreferences: SharedPreferences) {
                                 checkedStateGps.value = it
                                 if (it) {
                                     Logger.d("gpsmultiplestate.launch $it")
-                                    gpsMultiplePermissionsState.launchMultiplePermissionRequest()
+                                    //gpsMultiplePermissionsState.launchMultiplePermissionRequest()
+                                    PermissionRequired(
+                                        permissionState = finePermissionState,
+                                        permissionNotGrantedContent =
+                                        {
+                                            if (doNotShowRationale.value) {
+                                                Logger.d("feature not available")
+                                                Text(text = "feature not available")
+                                            }
+                                            else
+                                            {
+                                                Column {
+                                                    Text(
+                                                        text = "the gps is important for this app" +
+                                                                "please grant the permissions"
+                                                    )
+                                                    Row() {
+                                                        Button(onClick =
+                                                        {
+                                                            finePermissionState.launchPermissionRequest()
+                                                        }
+                                                        )
+                                                        {
+                                                            Text(text = "OK")
+                                                        }
+                                                        Button(onClick =
+                                                        {
+                                                            doNotShowRationale.value = true
+                                                        }
+                                                        )
+                                                        {
+                                                            Text(text = "nope")
+                                                        }
+
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        permissionNotAvailableContent = {
+                                            Column() {
+                                                Text(
+                                                    text =
+                                                    "gps permission denied"
+                                                )
+                                                Button(onClick = {
+
+                                                }) {
+
+                                                }
+
+                                            }
+                                        })
+                                    {
+                                        Text(text = "gps permission granted")
+
+                                    }
                                 }
                             },
                             modifier = Modifier
@@ -202,14 +257,6 @@ fun Menu(navController: NavController, sharedPreferences: SharedPreferences) {
                 }
 
 
-            }
-            item {
-                Button(onClick = {
-                    Logger.d("launch multiplepermissionreuqest")
-                    gpsMultiplePermissionsState.launchMultiplePermissionRequest()
-                }) {
-
-                }
             }
             item {
                 Row {
