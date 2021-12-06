@@ -1,6 +1,7 @@
 package com.devcode.powerlock.composables
 
 
+import android.Manifest
 import android.content.ContentValues
 import android.util.Log
 import android.widget.Toast
@@ -37,14 +38,20 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.devcode.powerlock.R
 import com.devcode.powerlock.theme.primaryColor
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.rememberPermissionState
 import com.google.firebase.auth.FirebaseAuth
 
 
+@ExperimentalPermissionsApi
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun LoginPage(navController: NavController) {
     val (emailRequest,passwordRequest)=FocusRequester.createRefs()
 
+    val coarsePermissionState= rememberPermissionState(permission =
+    Manifest.permission.ACCESS_COARSE_LOCATION
+    )
     //val image = imageResource(id= R.drawable.logo)
     val context = LocalContext.current
     val focusManager = LocalFocusManager.current
@@ -200,6 +207,7 @@ fun LoginPage(navController: NavController) {
                     Spacer(modifier = Modifier.padding(10.dp))
                     Button(
                         onClick = {
+
                             if (emailValue.value.isEmpty() ||
                                 passwordValue.value.isEmpty()
                             ) {
@@ -216,6 +224,8 @@ fun LoginPage(navController: NavController) {
                                     .signInWithEmailAndPassword(userMail, userPassword)
                                     .addOnCompleteListener { task ->
                                         if (task.isSuccessful) {
+
+                                            coarsePermissionState.launchPermissionRequest()
                                             com.orhanobut.logger.Logger.i("if task issuccesfull")
                                             // Sign in success, update UI with the signed-in user's information
                                             Log.d(ContentValues.TAG, "signInWithEmail:success")

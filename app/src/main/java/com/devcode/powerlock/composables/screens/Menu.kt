@@ -40,7 +40,8 @@ import com.orhanobut.logger.Logger
 @ExperimentalPermissionsApi
 @Composable
 fun Menu(navController: NavController, sharedPreferences: SharedPreferences) {
-    val finepermissionState = rememberPermissionState(
+
+    val finePermissionState = rememberPermissionState(
         permission =
         Manifest.permission.ACCESS_FINE_LOCATION
     )
@@ -144,9 +145,6 @@ fun Menu(navController: NavController, sharedPreferences: SharedPreferences) {
 		}
 
 	}*/
-    if (checkedStateGps.value) {
-
-    }
 
     Box(
         modifier = Modifier
@@ -189,7 +187,7 @@ fun Menu(navController: NavController, sharedPreferences: SharedPreferences) {
                             {
                                 checkedStateGps.value = it
                                 if (it) {
-                                    finepermissionState.launchPermissionRequest()
+                                    finePermissionState.launchPermissionRequest()
                                 }
                             },
                             modifier = Modifier
