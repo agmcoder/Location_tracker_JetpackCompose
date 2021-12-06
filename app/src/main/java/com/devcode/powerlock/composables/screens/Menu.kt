@@ -105,9 +105,7 @@ fun Menu(navController: NavController, sharedPreferences: SharedPreferences) {
         }
 
     }
-    val multiplePermissionsState = rememberSaveable {
-        mutableStateOf(true)
-    }
+
 
 
 /*val multiPermisos = rememberMultiplePermissionsState(listOf(android.Manifest.permission.ACCESS_FINE_LOCATION,android.Manifest.permission.ACCESS_COARSE_LOCATION ))
