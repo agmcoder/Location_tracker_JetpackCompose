@@ -98,3 +98,16 @@ dependencies {
 
 
 }
+
+dependencies {
+    // Preferences DataStore
+    implementation "androidx.datastore:datastore-preferences:1.0.0"
+
+    // Lifecycle component
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:2.4.0"
+
+    // Kotlin coroutines components
+    api "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.2"
+    api "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.2"
+
+}

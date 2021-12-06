@@ -19,7 +19,11 @@ import com.orhanobut.logger.AndroidLogAdapter
 import com.orhanobut.logger.Logger
 
 import android.content.SharedPreferences
+import androidx.compose.ui.platform.LocalContext
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.preferencesDataStore
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import java.util.prefs.Preferences
 
 class MainActivity : ComponentActivity() {
     @ExperimentalPermissionsApi
