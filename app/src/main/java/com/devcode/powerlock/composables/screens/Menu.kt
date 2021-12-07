@@ -108,7 +108,7 @@ fun Menu(navController : NavController, sharedPreferences : SharedPreferences) {
 
 								}
 								when {
-									//when all gps permissions are granted do this
+									//when all gps permissions and background location are granted do this
 									gpsMultiplePermissionsState.allPermissionsGranted &&
 											gpsBackgroundPermissionState.hasPermission -> {
 										checkedStateGps.value = it
@@ -116,7 +116,7 @@ fun Menu(navController : NavController, sharedPreferences : SharedPreferences) {
 										ed.apply()
 
 									}
-									//º                                                                                                                                                                         ºwhen all gps permission are not granted do this
+									//when all gps permissions and background are not granted do this                                                                                                                                                                         ºwhen all gps permission are not granted do this
 									!gpsMultiplePermissionsState.allPermissionsGranted ||
 											!gpsBackgroundPermissionState.hasPermission -> {
 										checkedStateGps.value = !it
