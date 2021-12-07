@@ -18,7 +18,7 @@ fun NavigationHost(sharedPreference: SharedPreferences) {
     val navController = rememberNavController()
 
     NavHost(navController = navController, startDestination = "login_page", builder = {
-        composable("login_page", content = { LoginPage(navController = navController) })
+        composable("login_page", content = { LoginPage(navController = navController, sharedPreference) })
         composable("register_page", content = { RegisterPage(navController = navController) })
         composable("menu_page", content = { MenuPage(navController = navController, sharedPreference) })
         composable(

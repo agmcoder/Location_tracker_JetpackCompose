@@ -22,18 +22,25 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.devcode.powerlock.R
-import com.devcode.powerlock.composables.permisos.Permission
 import com.devcode.powerlock.theme.whiteBackground
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import com.google.accompanist.permissions.rememberPermissionState
-import com.orhanobut.logger.Logger
 
 @RequiresApi(Build.VERSION_CODES.Q)
 @ExperimentalPermissionsApi
 @Composable
 fun Menu(navController : NavController, sharedPreferences : SharedPreferences) {
+	val ed : SharedPreferences.Editor = sharedPreferences.edit()
+	val initialValueShowed = sharedPreferences.getBoolean("showed", false)
 
+	var showed = rememberSaveable { mutableStateOf(initialValueShowed) }
+	val gpsPermissionState = rememberMultiplePermissionsState(
+		listOf(
+			android.Manifest.permission.ACCESS_COARSE_LOCATION,
+			android.Manifest.permission.ACCESS_FINE_LOCATION,
+		)
+	)
 	var granted : Int
 	var doNotShowRationale = rememberSaveable { mutableStateOf(false) }
 	val finePermissionState = rememberPermissionState(
@@ -47,13 +54,14 @@ fun Menu(navController : NavController, sharedPreferences : SharedPreferences) {
 				Manifest.permission.ACCESS_FINE_LOCATION
 			)
 		)
-
+	val gpsBackgroundPermissionState =
+		rememberPermissionState(Manifest.permission.ACCESS_BACKGROUND_LOCATION)
 	val context = LocalContext.current
 	val initialValueGPS = sharedPreferences.getBoolean("gps", false)
 	val initialValuePowerMenu = sharedPreferences.getBoolean("power", false)
 	val checkedStateGps = rememberSaveable { mutableStateOf(initialValueGPS) }
 	val checkedStatePowerMenu = rememberSaveable { mutableStateOf(initialValuePowerMenu) }
-	val ed : SharedPreferences.Editor = sharedPreferences.edit()
+
 	Box(
 		modifier = Modifier
 			.fillMaxSize()
@@ -65,7 +73,7 @@ fun Menu(navController : NavController, sharedPreferences : SharedPreferences) {
 
 		ed.apply()
 		LazyColumn {
-			item { Permission(sharedPreferences = sharedPreferences) }
+
 			item {
 
 				Row {
@@ -91,9 +99,31 @@ fun Menu(navController : NavController, sharedPreferences : SharedPreferences) {
 							checked = checkedStateGps.value,
 							onCheckedChange =
 							{
-								checkedStateGps.value = it
-								ed.putBoolean("gps", checkedStateGps.value)
-								ed.apply()
+								//request permissions if not is showed before
+								gpsMultiplePermissionsState.launchMultiplePermissionRequest()
+								when {
+									gpsMultiplePermissionsState.allPermissionsGranted -> {
+										gpsBackgroundPermissionState.launchPermissionRequest()
+									}
+
+								}
+								when {
+									//when all gps permissions are granted do this
+									gpsMultiplePermissionsState.allPermissionsGranted &&
+											gpsBackgroundPermissionState.hasPermission -> {
+										checkedStateGps.value = it
+										ed.putBoolean("gps", checkedStateGps.value)
+										ed.apply()
+
+									}
+									//º                                                                                                                                                                         ºwhen all gps permission are not granted do this
+									!gpsMultiplePermissionsState.allPermissionsGranted ||
+											!gpsBackgroundPermissionState.hasPermission -> {
+										checkedStateGps.value = !it
+										ed.putBoolean("gps", checkedStateGps.value)
+										ed.apply()
+									}
+								}
 
 							},
 							modifier = Modifier
