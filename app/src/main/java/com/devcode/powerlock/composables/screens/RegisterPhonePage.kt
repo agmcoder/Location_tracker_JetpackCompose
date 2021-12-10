@@ -1,5 +1,6 @@
 package com.devcode.powerlock.composables.screens
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.provider.Settings
 import androidx.compose.foundation.Image
@@ -25,6 +26,7 @@ import androidx.navigation.NavController
 import com.devcode.powerlock.R
 import com.devcode.powerlock.composables.Divisor
 import com.devcode.powerlock.composables.MenuToolbar
+import com.devcode.powerlock.model.getAndroidId
 
 import com.devcode.powerlock.theme.whiteBackground
 import com.google.firebase.auth.ktx.auth
@@ -46,9 +48,10 @@ fun RegisterPhonePage(navController: NavController) {
 
 @Composable
 fun BodyContentRegisterPhone(navController: NavController) {
-    val androidID = getAndroidId(LocalContext.current)
+    val context = LocalContext.current
+    val androidID = getAndroidId(context)
     var userEmail = ""
-    val context= LocalContext.current
+
     //FirebaseApp.initializeApp(ContextAmbient.current)
     val user = Firebase.auth.currentUser
     user?.let {
@@ -176,13 +179,9 @@ fun BodyContentRegisterPhone(navController: NavController) {
                             onClick = {
                                 Logger.d("entrando en boton guardar device")
                                 Logger.d("db getDb")
-
-
-
-                                val device= hashMapOf(
+                                val device = hashMapOf(
                                     "user" to userEmail,
                                     "id_android" to androidID
-
 
 
                                 )
@@ -193,10 +192,12 @@ fun BodyContentRegisterPhone(navController: NavController) {
                                         .set(device)
                                         .addOnSuccessListener {
                                             Logger.d("device añadido a coleccion con id: ")
+                                            navController.popBackStack()
                                             navController.navigate("menu_page")
                                         }
-                                        .addOnFailureListener{
+                                        .addOnFailureListener {
                                             Logger.d("error añadiendo documento device  ")
+                                            navController.popBackStack()
                                             navController.navigate("register_page")
                                         }
                                 }
@@ -218,10 +219,6 @@ fun BodyContentRegisterPhone(navController: NavController) {
 
 
 
-
-fun getAndroidId(context: Context): String? {
-    return Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID)
-}
 
 
 

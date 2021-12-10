@@ -248,6 +248,7 @@ fun LoginPage(navController : NavController, sharedPreferences : SharedPreferenc
 											ed.apply()
 											// Sign in success, update UI with the signed-in user's information
 											Logger.d(ContentValues.TAG, "signInWithEmail:success")
+											navController.popBackStack()
 											navController.navigate("menu_page")
 										} else {
 											Logger.i("else is susccessful")
