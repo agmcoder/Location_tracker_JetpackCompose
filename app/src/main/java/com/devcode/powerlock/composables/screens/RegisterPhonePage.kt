@@ -24,9 +24,8 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.devcode.powerlock.R
 import com.devcode.powerlock.composables.Divisor
-import com.devcode.powerlock.composables.Toolbar
-import com.devcode.powerlock.model.getDeviceLatitud
-import com.devcode.powerlock.model.getDeviceLongitud
+import com.devcode.powerlock.composables.MenuToolbar
+
 import com.devcode.powerlock.theme.whiteBackground
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
@@ -37,7 +36,7 @@ import com.orhanobut.logger.Logger
 @Composable
 fun RegisterPhonePage(navController: NavController) {
     Scaffold(
-        topBar = { Toolbar(title = "Registro de dispositivo") },
+        topBar = { MenuToolbar(title = "Registro de dispositivo") },
         content = { BodyContentRegisterPhone(navController) }
 
     )
@@ -179,17 +178,11 @@ fun BodyContentRegisterPhone(navController: NavController) {
                                 Logger.d("db getDb")
 
 
-                                Logger.d("getLocation")
-                                var longitud= getDeviceLongitud(context)
-                                Logger.d("lon[]")
-                                var latitud= getDeviceLatitud(context)
-                                Logger.d("latitud[0]")
-                                Logger.d("getdevicelocation ")
+
                                 val device= hashMapOf(
                                     "user" to userEmail,
-                                    "id_android" to androidID,
-                                    "lat" to latitud,
-                                    "lon" to longitud
+                                    "id_android" to androidID
+
 
 
                                 )

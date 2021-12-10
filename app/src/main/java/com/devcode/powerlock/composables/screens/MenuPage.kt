@@ -1,21 +1,22 @@
 package com.devcode.powerlock.composables.screens
 
 import android.content.SharedPreferences
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.focus.onFocusChanged
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.devcode.powerlock.composables.BottomBar
-import com.devcode.powerlock.composables.Toolbar
+import com.devcode.powerlock.composables.MenuToolbar
 import com.devcode.powerlock.navigation.getListDestination
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 
+@RequiresApi(Build.VERSION_CODES.Q)
 @ExperimentalPermissionsApi
 @Composable()
 fun MenuPage(navController: NavController, sharedPreferences : SharedPreferences) {
@@ -24,12 +25,13 @@ fun MenuPage(navController: NavController, sharedPreferences : SharedPreferences
 
 }
 
+@RequiresApi(Build.VERSION_CODES.Q)
 @ExperimentalPermissionsApi
 @Composable
 fun ScaffoldItem(navController: NavController, sharedPreferences : SharedPreferences) {
 
     Scaffold(
-        topBar = { Toolbar("Menu PowerLock") },
+        topBar = { MenuToolbar("Menu PowerLock") },
         bottomBar = {
             ButtonBottomBar(navController = navController)
 
