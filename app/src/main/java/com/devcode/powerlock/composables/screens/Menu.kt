@@ -23,6 +23,7 @@ import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
 import androidx.navigation.NavController
 import com.devcode.powerlock.R
+import com.devcode.powerlock.model.getFusedLocationProviderClient
 import com.devcode.powerlock.theme.whiteBackground
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
@@ -115,6 +116,8 @@ fun Menu(navController : NavController, sharedPreferences : SharedPreferences) {
 										checkedStateGps.value = it
 										ed.putBoolean("gps", checkedStateGps.value)
 										ed.apply()
+										val fusedLocationClient=getFusedLocationProviderClient(context)
+										var lastLocation=fusedLocationClient.getCurrentLocation()
 
 									}
 									//when all gps permissions and background are not granted do this                                                                                                                                                                         ºwhen all gps permission are not granted do this
