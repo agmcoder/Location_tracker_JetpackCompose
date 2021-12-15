@@ -18,39 +18,39 @@ fun PermissionUI(
 	scaffoldState : ScaffoldState,
 	permissionAction : (PermissionAction) -> Unit
 ) {
-	val permissionGranted=Common.checkIfPermissionGranted(context,permission)
-	if(permissionGranted){
+	val permissionGranted = Common.checkIfPermissionGranted(context, permission)
+	if (permissionGranted) {
 		permissionAction(PermissionAction.OnPermissionGranted)
 		return
 	}
-	val launcher= rememberLauncherForActivityResult(
+	val launcher = rememberLauncherForActivityResult(
 		ActivityResultContracts.RequestPermission()
-	){isGranted:Boolean->
-		if (isGranted){
+	) { isGranted : Boolean ->
+		if (isGranted) {
 			permissionAction(PermissionAction.OnPermissionGranted)
-		}else{
+		} else {
 			permissionAction(PermissionAction.OnPermissionDenied)
 		}
 	}
-	val showPermissionRationale=Common.shouldShowPermissionRationale( context,permission)
-	if ( showPermissionRationale){
-		LaunchedEffect(showPermissionRationale){
-			val snackBarResult=scaffoldState.snackbarHostState.showSnackbar(
+	val showPermissionRationale = Common.shouldShowPermissionRationale(context, permission)
+	if (showPermissionRationale) {
+		LaunchedEffect(showPermissionRationale) {
+			val snackBarResult = scaffoldState.snackbarHostState.showSnackbar(
 				message = permissionRationale,
 				actionLabel = "grant Access",
 				duration = SnackbarDuration.Long
 			)
-			when(snackBarResult){
-				SnackbarResult.Dismissed->{
+			when (snackBarResult) {
+				SnackbarResult.Dismissed -> {
 					permissionAction(PermissionAction.OnPermissionDenied)
 				}
-				SnackbarResult.ActionPerformed->{
+				SnackbarResult.ActionPerformed -> {
 					launcher.launch(permission)
 				}
 			}
 		}
 
-	}else{
+	} else {
 		SideEffect {
 			launcher.launch(permission)
 		}

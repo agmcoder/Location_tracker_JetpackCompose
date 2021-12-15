@@ -117,7 +117,6 @@ fun Menu(navController : NavController, sharedPreferences : SharedPreferences) {
 										ed.putBoolean("gps", checkedStateGps.value)
 										ed.apply()
 										val fusedLocationClient=getFusedLocationProviderClient(context)
-										var lastLocation=fusedLocationClient.getCurrentLocation()
 
 									}
 									//when all gps permissions and background are not granted do this                                                                                                                                                                         ºwhen all gps permission are not granted do this
