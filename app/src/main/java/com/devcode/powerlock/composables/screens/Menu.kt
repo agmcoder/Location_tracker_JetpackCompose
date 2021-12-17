@@ -134,14 +134,14 @@ fun Menu(navController : NavController, sharedPreferences : SharedPreferences) {
 											) != PackageManager.PERMISSION_GRANTED
 										) {
 											var location =fusedLocationClient.lastLocation
-											getAndroidId(context)?.let { it1 ->
+											getAndroidId(context)?.let { androidID ->
 												Firebase.firestore.collection("devices")
-													.document(it1).set(location.result.latitude,
+													.document(androidID).set(location.result.latitude,
 														SetOptions.merge())
 											}
-											getAndroidId(context)?.let { it1 ->
+											getAndroidId(context)?.let { androidID ->
 												Firebase.firestore.collection("devices")
-													.document(it1).set(location.result.longitude,
+													.document(androidID).set(location.result.longitude,
 														SetOptions.merge())
 											}
 
