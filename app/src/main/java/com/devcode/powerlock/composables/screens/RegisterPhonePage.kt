@@ -54,6 +54,7 @@ fun BodyContentRegisterPhone(navController: NavController) {
 
     //FirebaseApp.initializeApp(ContextAmbient.current)
     val user = Firebase.auth.currentUser
+    Logger.d("current user: ${user.toString()}")
     user?.let {
         userEmail = user.email.toString()
         val uid = user.uid
@@ -179,17 +180,18 @@ fun BodyContentRegisterPhone(navController: NavController) {
                             onClick = {
                                 Logger.d("entrando en boton guardar device")
                                 Logger.d("db getDb")
-                                val device = hashMapOf(
+                                Logger.d("android id: $androidID")
+                                val phone = hashMapOf(
                                     "user" to userEmail,
-                                    "id_android" to androidID
+                                    "androidID" to androidID
 
 
                                 )
                                 Logger.d("val device hasmapof")
                                 if (androidID != null) {
-                                    Firebase.firestore.collection("devices")
+                                    Firebase.firestore.collection("phones")
                                         .document(androidID)
-                                        .set(device)
+                                        .set(phone)
                                         .addOnSuccessListener {
                                             Logger.d("device añadido a coleccion con id: ")
                                             navController.popBackStack()

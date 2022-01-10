@@ -23,19 +23,18 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
 import androidx.navigation.NavController
 import com.devcode.powerlock.R
+import com.devcode.powerlock.fusedLocationClient
 import com.devcode.powerlock.model.getAndroidId
-import com.devcode.powerlock.model.getFusedLocationProviderClient
 import com.devcode.powerlock.theme.whiteBackground
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import com.google.accompanist.permissions.rememberPermissionState
-import com.google.android.gms.tasks.Task
 import com.google.firebase.firestore.SetOptions
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import com.orhanobut.logger.Logger
 
 @RequiresApi(Build.VERSION_CODES.Q)
 @ExperimentalPermissionsApi
@@ -124,25 +123,37 @@ fun Menu(navController : NavController, sharedPreferences : SharedPreferences) {
 										checkedStateGps.value = it
 										ed.putBoolean("gps", checkedStateGps.value)
 										ed.apply()
-										val fusedLocationClient=getFusedLocationProviderClient(context)
+
 										if (ActivityCompat.checkSelfPermission(
 												context,
 												Manifest.permission.ACCESS_FINE_LOCATION
-											) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+											) != PackageManager.PERMISSION_GRANTED &&
+											ActivityCompat.checkSelfPermission(
 												context,
 												Manifest.permission.ACCESS_COARSE_LOCATION
 											) != PackageManager.PERMISSION_GRANTED
 										) {
-											var location =fusedLocationClient.lastLocation
 											getAndroidId(context)?.let { androidID ->
 												Firebase.firestore.collection("devices")
-													.document(androidID).set(location.result.latitude,
-														SetOptions.merge())
+													.document(androidID).set(
+														fusedLocationClient.lastLocation
+															.addOnSuccessListener {location: Location ->
+																location.longitude
+																Logger.d("LONGITUD:" +
+																		" ${location.longitude}","longitud")
+															},
+														SetOptions.merge()
+													)
 											}
 											getAndroidId(context)?.let { androidID ->
 												Firebase.firestore.collection("devices")
-													.document(androidID).set(location.result.longitude,
-														SetOptions.merge())
+													.document(androidID).set(
+														fusedLocationClient.lastLocation
+															.addOnSuccessListener {location: Location ->
+																location.latitude
+															},
+														SetOptions.merge()
+													)
 											}
 
 										}
