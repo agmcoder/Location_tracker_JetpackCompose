@@ -1,5 +1,6 @@
 package com.devcode.powerlock
 
+import android.content.Context
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -11,6 +12,10 @@ import com.orhanobut.logger.Logger
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
+import android.content.Intent
+
+
+
 
 private const val TAG ="MainActivity"
 lateinit var fusedLocationClient:FusedLocationProviderClient
@@ -33,7 +38,9 @@ class MainActivity : ComponentActivity() {
 
     }
 
+
 }
+
 
 
 

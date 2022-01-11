@@ -14,7 +14,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import com.devcode.powerlock.composables.permisos.PermissionAction
 import com.devcode.powerlock.composables.permisos.PermissionUI
 import com.devcode.powerlock.viewmodel.PermissionViewModel
 import kotlinx.coroutines.launch

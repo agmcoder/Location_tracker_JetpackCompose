@@ -2,9 +2,8 @@ package com.devcode.powerlock.composables.screens
 
 import android.Manifest
 import android.content.SharedPreferences
-import android.content.pm.PackageManager
-import android.location.Location
 import android.os.Build
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -22,19 +21,14 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.navigation.NavController
 import com.devcode.powerlock.R
-import com.devcode.powerlock.fusedLocationClient
-import com.devcode.powerlock.model.getAndroidId
+import com.devcode.powerlock.composables.permisos.requestPermissions
 import com.devcode.powerlock.theme.whiteBackground
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import com.google.accompanist.permissions.rememberPermissionState
-import com.google.firebase.firestore.SetOptions
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
-import com.orhanobut.logger.Logger
 
 @RequiresApi(Build.VERSION_CODES.Q)
 @ExperimentalPermissionsApi
@@ -108,65 +102,13 @@ fun Menu(navController : NavController, sharedPreferences : SharedPreferences) {
 							checked = checkedStateGps.value,
 							onCheckedChange =
 							{
-								//request permissions if not is showed before
-								//gpsMultiplePermissionsState.launchMultiplePermissionRequest()
-								when {
-									!gpsMultiplePermissionsState.allPermissionsGranted -> {
-										gpsBackgroundPermissionState.launchPermissionRequest()
-									}
+								if (!showed.value) {
+									requestPermissions()
+								} else {
+									ActivityResultContracts.RequestMultiplePermissions
 
 								}
-								when {
-									//when all gps permissions and background location are granted do this
-									gpsMultiplePermissionsState.allPermissionsGranted &&
-											gpsBackgroundPermissionState.hasPermission -> {
-										checkedStateGps.value = it
-										ed.putBoolean("gps", checkedStateGps.value)
-										ed.apply()
-
-										if (ActivityCompat.checkSelfPermission(
-												context,
-												Manifest.permission.ACCESS_FINE_LOCATION
-											) != PackageManager.PERMISSION_GRANTED &&
-											ActivityCompat.checkSelfPermission(
-												context,
-												Manifest.permission.ACCESS_COARSE_LOCATION
-											) != PackageManager.PERMISSION_GRANTED
-										) {
-											getAndroidId(context)?.let { androidID ->
-												Firebase.firestore.collection("devices")
-													.document(androidID).set(
-														fusedLocationClient.lastLocation
-															.addOnSuccessListener {location: Location ->
-																location.longitude
-																Logger.d("LONGITUD:" +
-																		" ${location.longitude}","longitud")
-															},
-														SetOptions.merge()
-													)
-											}
-											getAndroidId(context)?.let { androidID ->
-												Firebase.firestore.collection("devices")
-													.document(androidID).set(
-														fusedLocationClient.lastLocation
-															.addOnSuccessListener {location: Location ->
-																location.latitude
-															},
-														SetOptions.merge()
-													)
-											}
-
-										}
-
-									}
-									//when all gps permissions and background are not granted do this                                                                                                                                                                         ºwhen all gps permission are not granted do this
-									!gpsMultiplePermissionsState.allPermissionsGranted ||
-											!gpsBackgroundPermissionState.hasPermission -> {
-										checkedStateGps.value = !it
-										ed.putBoolean("gps", checkedStateGps.value)
-										ed.apply()
-									}
-								}
+								checkedStateGps.value = it
 
 							},
 							modifier = Modifier
