@@ -109,9 +109,9 @@ fun Menu(navController : NavController, sharedPreferences : SharedPreferences) {
 							onCheckedChange =
 							{
 								//request permissions if not is showed before
-								gpsMultiplePermissionsState.launchMultiplePermissionRequest()
+								//gpsMultiplePermissionsState.launchMultiplePermissionRequest()
 								when {
-									gpsMultiplePermissionsState.allPermissionsGranted -> {
+									!gpsMultiplePermissionsState.allPermissionsGranted -> {
 										gpsBackgroundPermissionState.launchPermissionRequest()
 									}
 

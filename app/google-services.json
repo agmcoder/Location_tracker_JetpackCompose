@@ -1,33 +1,33 @@
 {
   "project_info": {
-    "project_number": "575494470691",
-    "project_id": "powerlock-e2d1c",
-    "storage_bucket": "powerlock-e2d1c.appspot.com"
+    "project_number": "279243811538",
+    "project_id": "powerlock-fe794",
+    "storage_bucket": "powerlock-fe794.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:575494470691:android:ad188bc8f6860eaed20596",
+        "mobilesdk_app_id": "1:279243811538:android:f4a515cdd9a9c743f39b0b",
         "android_client_info": {
           "package_name": "com.devcode.powerlock"
         }
       },
       "oauth_client": [
         {
-          "client_id": "575494470691-9japc8m4p64f8mg6apj4j9sqv4m4k11u.apps.googleusercontent.com",
+          "client_id": "279243811538-ei7v8dl97isoff1fhjpqnncc1rmuo17b.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyDjrVHxaZkx1L6Un9pCaYF8Dgdj3Hi8cjU"
+          "current_key": "AIzaSyDKYHaPqnJFicQLU1gSZ_I5V2k-vEdpWZM"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "575494470691-9japc8m4p64f8mg6apj4j9sqv4m4k11u.apps.googleusercontent.com",
+              "client_id": "279243811538-ei7v8dl97isoff1fhjpqnncc1rmuo17b.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

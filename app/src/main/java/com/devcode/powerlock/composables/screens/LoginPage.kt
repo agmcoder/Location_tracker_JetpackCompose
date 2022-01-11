@@ -1,9 +1,7 @@
 package com.devcode.powerlock.composables
 
 import android.annotation.SuppressLint
-import android.content.ContentValues
 import android.content.SharedPreferences
-import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
@@ -39,10 +37,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.devcode.powerlock.R
+import com.devcode.powerlock.model.emailPasswordLogin
 import com.devcode.powerlock.theme.primaryColor
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
-import com.google.firebase.auth.FirebaseAuth
-import com.orhanobut.logger.Logger
 
 @SuppressLint("CommitPrefEdits")
 @ExperimentalPermissionsApi
@@ -237,34 +234,13 @@ fun LoginPage(navController : NavController, sharedPreferences : SharedPreferenc
 								com.orhanobut.logger.Logger.i("else del boton signup")
 								var userMail : String = emailValue.value
 								var userPassword : String = passwordValue.value
-								val mAuth = FirebaseAuth.getInstance()
-								mAuth
-									.signInWithEmailAndPassword(userMail, userPassword)
-									.addOnCompleteListener { task ->
-										if (task.isSuccessful) {
-
-											ed.putString("user", userMail)
-											ed.putString("password", userPassword)
-											ed.apply()
-											// Sign in success, update UI with the signed-in user's information
-											Logger.d(ContentValues.TAG, "signInWithEmail:success")
-											navController.popBackStack()
-											navController.navigate("menu_page")
-										} else {
-											Logger.i("else is susccessful")
-											// If sign in fails, display a message to the user.
-											Log.w(
-												ContentValues.TAG,
-												"signInWithEmail:failure",
-												task.exception
-											)
-											Toast.makeText(
-												context,
-												"Authentication failed.",
-												Toast.LENGTH_SHORT
-											).show()
-										}
-									}
+								emailPasswordLogin(
+									context,
+									userMail,
+									userPassword,
+									navController,
+									ed
+								)
 
 							}
 
