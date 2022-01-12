@@ -24,7 +24,6 @@ import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
 import androidx.navigation.NavController
 import com.devcode.powerlock.R
-import com.devcode.powerlock.composables.permisos.requestPermissions
 import com.devcode.powerlock.theme.whiteBackground
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
@@ -103,9 +102,7 @@ fun Menu(navController : NavController, sharedPreferences : SharedPreferences) {
 							onCheckedChange =
 							{
 								if (!showed.value) {
-									requestPermissions()
 								} else {
-									ActivityResultContracts.RequestMultiplePermissions
 
 								}
 								checkedStateGps.value = it
