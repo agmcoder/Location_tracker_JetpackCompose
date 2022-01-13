@@ -34,30 +34,6 @@ import com.google.accompanist.permissions.rememberPermissionState
 @Composable
 fun Menu(navController : NavController, sharedPreferences : SharedPreferences) {
 	val ed : SharedPreferences.Editor = sharedPreferences.edit()
-	val initialValueShowed = sharedPreferences.getBoolean("showed", false)
-
-	var showed = rememberSaveable { mutableStateOf(initialValueShowed) }
-	val gpsPermissionState = rememberMultiplePermissionsState(
-		listOf(
-			android.Manifest.permission.ACCESS_COARSE_LOCATION,
-			android.Manifest.permission.ACCESS_FINE_LOCATION,
-		)
-	)
-	var granted : Int
-	var doNotShowRationale = rememberSaveable { mutableStateOf(false) }
-	val finePermissionState = rememberPermissionState(
-		permission =
-		Manifest.permission.ACCESS_FINE_LOCATION
-	)
-	val gpsMultiplePermissionsState =
-		rememberMultiplePermissionsState(
-			permissions = listOf(
-				Manifest.permission.ACCESS_COARSE_LOCATION,
-				Manifest.permission.ACCESS_FINE_LOCATION
-			)
-		)
-	val gpsBackgroundPermissionState =
-		rememberPermissionState(Manifest.permission.ACCESS_BACKGROUND_LOCATION)
 	val context = LocalContext.current
 	val initialValueGPS = sharedPreferences.getBoolean("gps", false)
 	val initialValuePowerMenu = sharedPreferences.getBoolean("power", false)
@@ -101,10 +77,7 @@ fun Menu(navController : NavController, sharedPreferences : SharedPreferences) {
 							checked = checkedStateGps.value,
 							onCheckedChange =
 							{
-								if (!showed.value) {
-								} else {
 
-								}
 								checkedStateGps.value = it
 
 							},
