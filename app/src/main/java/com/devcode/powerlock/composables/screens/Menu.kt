@@ -24,8 +24,6 @@ import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
 import androidx.navigation.NavController
 import com.devcode.powerlock.R
-import com.devcode.powerlock.model.getGPS
-import com.devcode.powerlock.model.getLocation
 import com.devcode.powerlock.theme.whiteBackground
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
@@ -82,14 +80,7 @@ fun Menu(navController : NavController, sharedPreferences : SharedPreferences) {
 							{
 
 								checkedStateGps.value = it
-								if (it){
-									getLocation()
-									var location= getGPS()
-									Logger.d("latitud: ${location.latitude}")
-									Logger.d("longitud ${location.longitude}")
-								}else if (!it){
-									Logger.d("gps off")
-								}
+
 
 
 							},
