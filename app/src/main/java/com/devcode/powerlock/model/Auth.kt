@@ -54,7 +54,7 @@ fun emailPasswordLogin(
                 ed.putString("user", userMail)
                 ed.putString("password", userPassword)
                 ed.apply()
-                Logger.d(ContentValues.TAG, "signInWithEmail:success")
+                Logger.d( "signInWithEmail:success")
                 navController.popBackStack()
                 navController.navigate("menu_page")
             } else {

@@ -50,8 +50,8 @@ apply plugin: 'com.android.application'
 apply plugin: 'com.google.gms.google-services'
 dependencies {
     implementation 'androidx.core:core-ktx:1.7.0'
-    implementation 'androidx.appcompat:appcompat:1.4.0'
-    implementation 'com.google.android.material:material:1.4.0'
+    implementation 'androidx.appcompat:appcompat:1.4.1'
+    implementation 'com.google.android.material:material:1.5.0'
     //noinspection GradleDependency
     implementation "androidx.compose.ui:ui:$compose_version"
     //noinspection GradleDependency
@@ -92,7 +92,7 @@ dependencies {
     //text down if is not implemented delete it
     implementation "com.karumi:dexter:5.0.0"
     //location service google
-    implementation "com.google.android.gms:play-services-location:19.0.0"
+    implementation "com.google.android.gms:play-services-location:19.0.1"
 
 
 
