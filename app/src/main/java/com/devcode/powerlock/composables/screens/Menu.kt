@@ -1,9 +1,10 @@
 package com.devcode.powerlock.composables.screens
 
 import android.Manifest
+import android.content.Context
 import android.content.SharedPreferences
+import android.content.pm.PackageManager
 import android.os.Build
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -21,21 +22,26 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.core.content.ContextCompat
+import androidx.core.app.ActivityCompat
 import androidx.navigation.NavController
 import com.devcode.powerlock.R
+import com.devcode.powerlock.model.getAndroidId
+import com.devcode.powerlock.model.saveLocation
 import com.devcode.powerlock.theme.whiteBackground
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
-import com.google.accompanist.permissions.rememberMultiplePermissionsState
-import com.google.accompanist.permissions.rememberPermissionState
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
 import com.orhanobut.logger.Logger
 
 @RequiresApi(Build.VERSION_CODES.Q)
 @ExperimentalPermissionsApi
 @Composable
 fun Menu(navController : NavController, sharedPreferences : SharedPreferences) {
+	val context : Context = LocalContext.current
+	var fusedLocationProviderClient : FusedLocationProviderClient
+
 	val ed : SharedPreferences.Editor = sharedPreferences.edit()
-	val context = LocalContext.current
+	//val context = LocalContext.current
 	val initialValueGPS = sharedPreferences.getBoolean("gps", false)
 	val initialValuePowerMenu = sharedPreferences.getBoolean("power", false)
 	val checkedStateGps = rememberSaveable { mutableStateOf(initialValueGPS) }
@@ -77,11 +83,37 @@ fun Menu(navController : NavController, sharedPreferences : SharedPreferences) {
 						Switch(
 							checked = checkedStateGps.value,
 							onCheckedChange =
-							{
+							{ it ->
 
 								checkedStateGps.value = it
+								if (checkedStateGps.value) {
+									fusedLocationProviderClient =
+										LocationServices.getFusedLocationProviderClient(context)
+									if (ActivityCompat.checkSelfPermission(
+											context,
+											Manifest.permission.ACCESS_FINE_LOCATION
+										) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+											context,
+											Manifest.permission.ACCESS_COARSE_LOCATION
+										) != PackageManager.PERMISSION_GRANTED
+									) {
+										// TODO: Consider calling
+										//    ActivityCompat#requestPermissions
+										// here to request the missing permissions, and then overriding
+										//   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+										//                                          int[] grantResults)
+										// to handle the case where the user grants the permission. See the documentation
+										// for ActivityCompat#requestPermissions for more details.
 
+									}
+									fusedLocationProviderClient.lastLocation.addOnSuccessListener {
 
+										Logger.d("location in switch ${it.latitude} <--> ${it.longitude}")
+										getAndroidId(context)?.let { it1 -> saveLocation(it, it1) }
+
+									}
+
+								}
 
 							},
 							modifier = Modifier

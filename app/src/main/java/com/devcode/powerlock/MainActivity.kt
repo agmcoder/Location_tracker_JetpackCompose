@@ -11,12 +11,16 @@ import androidx.core.content.ContextCompat
 import com.devcode.powerlock.navigation.NavigationHost
 import com.devcode.powerlock.theme.SecurePhoneAppTheme
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
 import com.orhanobut.logger.AndroidLogAdapter
 import com.orhanobut.logger.Logger
+import java.util.*
 
 class MainActivity : ComponentActivity() {
 	private val FINE_LOCATION_CODE = 123
 	private val COARSE_LOCATION_CODE = 113
+	lateinit var fusedLocationProviderClient : FusedLocationProviderClient
 
 	@ExperimentalPermissionsApi
 	override fun onCreate(savedInstanceState : Bundle?) {
@@ -26,6 +30,11 @@ class MainActivity : ComponentActivity() {
 
 		setContent {
 			SecurePhoneAppTheme {
+
+				//location
+
+				//fusedLocationProviderClient=LocationServices.getFusedLocationProviderClient(this)
+
 				//checkPermission(Manifest.permission.ACCESS_COARSE_LOCATION,COARSE_LOCATION_CODE)
 				checkPermission(Manifest.permission.ACCESS_FINE_LOCATION, FINE_LOCATION_CODE)
 				Logger.addLogAdapter(AndroidLogAdapter())
@@ -34,6 +43,8 @@ class MainActivity : ComponentActivity() {
 		}
 
 	}
+
+
     //we have implemented coarse and fine request permission when we start the app
     //we must to implement this one in runtime permissions
 
@@ -75,6 +86,7 @@ class MainActivity : ComponentActivity() {
 			}
 		}
 	}
+
 
 }
 
