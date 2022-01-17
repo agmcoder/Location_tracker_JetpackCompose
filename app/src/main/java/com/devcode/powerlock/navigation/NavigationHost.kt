@@ -1,6 +1,8 @@
 package com.devcode.powerlock.navigation
 
 import android.content.SharedPreferences
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -12,6 +14,7 @@ import com.learnandroid.powerlock.composables.RegisterPage
 import com.devcode.powerlock.composables.screens.RegisterPhonePage
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 
+@RequiresApi(Build.VERSION_CODES.Q)
 @ExperimentalPermissionsApi
 @Composable
 fun NavigationHost(sharedPreference: SharedPreferences) {

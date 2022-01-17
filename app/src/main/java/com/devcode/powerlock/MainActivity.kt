@@ -1,18 +1,24 @@
 package com.devcode.powerlock
 
 import android.Manifest
+import android.annotation.SuppressLint
+import android.content.SharedPreferences
 import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.annotation.RequiresApi
+import androidx.compose.ui.platform.LocalContext
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import com.devcode.powerlock.model.getAndroidId
+import com.devcode.powerlock.model.getGPSLocationStateToSharedPreferences
 import com.devcode.powerlock.navigation.NavigationHost
 import com.devcode.powerlock.theme.SecurePhoneAppTheme
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.location.LocationServices
 import com.orhanobut.logger.AndroidLogAdapter
 import com.orhanobut.logger.Logger
 import java.util.*
@@ -22,6 +28,8 @@ class MainActivity : ComponentActivity() {
 	private val COARSE_LOCATION_CODE = 113
 	lateinit var fusedLocationProviderClient : FusedLocationProviderClient
 
+	@SuppressLint("CommitPrefEdits")
+	@RequiresApi(Build.VERSION_CODES.Q)
 	@ExperimentalPermissionsApi
 	override fun onCreate(savedInstanceState : Bundle?) {
 		super.onCreate(savedInstanceState)
@@ -31,14 +39,18 @@ class MainActivity : ComponentActivity() {
 		setContent {
 			SecurePhoneAppTheme {
 
-				//location
-
-				//fusedLocationProviderClient=LocationServices.getFusedLocationProviderClient(this)
 
 				//checkPermission(Manifest.permission.ACCESS_COARSE_LOCATION,COARSE_LOCATION_CODE)
 				checkPermission(Manifest.permission.ACCESS_FINE_LOCATION, FINE_LOCATION_CODE)
 				Logger.addLogAdapter(AndroidLogAdapter())
-				NavigationHost(getSharedPreferences("mispreferencias", MODE_PRIVATE))
+				val sharedPreferences=getSharedPreferences("sharedPreferences", MODE_PRIVATE)
+				val ed : SharedPreferences.Editor = sharedPreferences.edit()
+				val androidID= getAndroidId(LocalContext.current)
+				getGPSLocationStateToSharedPreferences( androidID,sharedPreferences)
+
+
+
+				NavigationHost(sharedPreferences)
 			}
 		}
 

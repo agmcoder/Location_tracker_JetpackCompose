@@ -90,7 +90,7 @@ dependencies {
     //request permissions
     implementation "com.google.accompanist:accompanist-permissions:0.21.4-beta"
     //text down if is not implemented delete it
-    implementation "com.karumi:dexter:5.0.0"
+    implementation "com.karumi:dexter:6.2.3"
     //location service google
     implementation "com.google.android.gms:play-services-location:19.0.1"
 

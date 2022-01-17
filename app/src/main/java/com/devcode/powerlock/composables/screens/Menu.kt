@@ -27,6 +27,7 @@ import androidx.navigation.NavController
 import com.devcode.powerlock.R
 import com.devcode.powerlock.model.getAndroidId
 import com.devcode.powerlock.model.saveLocation
+import com.devcode.powerlock.model.setGPSLocationState
 import com.devcode.powerlock.theme.whiteBackground
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -39,13 +40,14 @@ import com.orhanobut.logger.Logger
 fun Menu(navController : NavController, sharedPreferences : SharedPreferences) {
 	val context : Context = LocalContext.current
 	var fusedLocationProviderClient : FusedLocationProviderClient
-
+	val androidID : String? = getAndroidId(context)
 	val ed : SharedPreferences.Editor = sharedPreferences.edit()
 	//val context = LocalContext.current
-	val initialValueGPS = sharedPreferences.getBoolean("gps", false)
+	val initialValueGpsState = sharedPreferences.getBoolean("GPS", false)
 	val initialValuePowerMenu = sharedPreferences.getBoolean("power", false)
-	val checkedStateGps = rememberSaveable { mutableStateOf(initialValueGPS) }
+	val checkedStateGps = rememberSaveable { mutableStateOf(initialValueGpsState) }
 	val checkedStatePowerMenu = rememberSaveable { mutableStateOf(initialValuePowerMenu) }
+	Logger.d("initial value gpsState Menu.kt -> $initialValueGpsState")
 
 	Box(
 		modifier = Modifier
@@ -80,23 +82,41 @@ fun Menu(navController : NavController, sharedPreferences : SharedPreferences) {
 						Modifier.fillMaxSize(),
 						contentAlignment = Alignment.CenterEnd
 					) {
+
 						Switch(
 							checked = checkedStateGps.value,
 							onCheckedChange =
-							{ it ->
+							{ state ->
 
-								checkedStateGps.value = it
+								checkedStateGps.value = state
+
+
 								if (checkedStateGps.value) {
 									fusedLocationProviderClient =
 										LocationServices.getFusedLocationProviderClient(context)
 									if (ActivityCompat.checkSelfPermission(
 											context,
 											Manifest.permission.ACCESS_FINE_LOCATION
-										) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+										) == PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
 											context,
 											Manifest.permission.ACCESS_COARSE_LOCATION
-										) != PackageManager.PERMISSION_GRANTED
+										) == PackageManager.PERMISSION_GRANTED
 									) {
+										//after checking permissions and they are granted we can
+										//get the location.
+										fusedLocationProviderClient.lastLocation.addOnSuccessListener { location ->
+
+											Logger.d("location in switch ${location.latitude} <--> ${location.longitude}")
+
+											if (androidID != null) {
+												saveLocation(location, androidID)
+												setGPSLocationState(state,androidID)
+											}
+
+										}
+
+										//the next parragraph is if the conditional if has != instead of ==
+
 										// TODO: Consider calling
 										//    ActivityCompat#requestPermissions
 										// here to request the missing permissions, and then overriding
@@ -105,14 +125,16 @@ fun Menu(navController : NavController, sharedPreferences : SharedPreferences) {
 										// to handle the case where the user grants the permission. See the documentation
 										// for ActivityCompat#requestPermissions for more details.
 
-									}
-									fusedLocationProviderClient.lastLocation.addOnSuccessListener {
-
-										Logger.d("location in switch ${it.latitude} <--> ${it.longitude}")
-										getAndroidId(context)?.let { it1 -> saveLocation(it, it1) }
+									} else {
+										checkedStateGps.value = !state
 
 									}
 
+								}
+								else{
+									if (androidID != null) {
+										setGPSLocationState(state, androidID = androidID)
+									}
 								}
 
 							},
@@ -128,6 +150,7 @@ fun Menu(navController : NavController, sharedPreferences : SharedPreferences) {
 
 						)
 					}
+
 				}
 
 			}
