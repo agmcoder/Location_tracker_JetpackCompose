@@ -7,3 +7,4 @@ data class Ubicacion(
 	val titulo:String,
 	val descripcion:String
 	)
+

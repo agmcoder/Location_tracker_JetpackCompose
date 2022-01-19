@@ -9,6 +9,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.SetOptions
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import com.google.type.LatLng
 import com.orhanobut.logger.Logger
 
 @SuppressLint("StaticFieldLeak")
@@ -106,6 +107,28 @@ fun getCurrentUserName(context : Context) : String? {
 	}
 	return null
 }
+
+
+//we will get all phones that the current user has associated
+fun getPhonesByUser(curretUser:String):Array<Phone>{
+	val phones:MutableList<Phone>
+	db.collection("phones").whereEqualTo("user",curretUser)
+		.get().addOnSuccessListener { documents->
+			for (document in documents)
+				phones.add(
+					Phone(
+					document.getBoolean("GPSLocationState") ,
+					document.getString("androidID"),
+						Ubicacion()
+
+				)
+				)
+
+		}
+
+
+}
+
 
 fun getDb() : FirebaseFirestore {
 	return Firebase.firestore
