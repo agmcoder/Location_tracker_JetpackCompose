@@ -1,10 +1,9 @@
 package com.devcode.powerlock.model
 
-import com.google.type.LatLng
-
+import com.google.android.libraries.maps.*
 data class Ubicacion(
-	val ubicacion:LatLng,
-	val titulo:String,
-	val descripcion:String
+	val ubicacion:com.google.android.libraries.maps.model.LatLng?,
+	val titulo:String?,
+	val descripcion:String?
 	)
 

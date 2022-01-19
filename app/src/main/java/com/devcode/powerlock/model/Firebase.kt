@@ -4,12 +4,12 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.SharedPreferences
 import android.location.Location
+import com.google.android.libraries.maps.model.LatLng
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.SetOptions
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
-import com.google.type.LatLng
 import com.orhanobut.logger.Logger
 
 @SuppressLint("StaticFieldLeak")
@@ -25,10 +25,10 @@ fun saveLocation(location : Location, androidID : String) {
 }
 
 fun setGPSLocationState(state : Boolean, androidID : String) {
-	val state = hashMapOf(
+	val estado = hashMapOf(
 		"GPSLocationState" to state
 	)
-	db.collection("phones").document(androidID).set(state, SetOptions.merge())
+	db.collection("phones").document(androidID).set(estado, SetOptions.merge())
 
 }
 
@@ -70,10 +70,10 @@ fun getLatLong(userName : String) : HashMap<String?, String?> {
 				db.collection("phones").document(document.id).get()
 					.addOnSuccessListener { documentSnapShot ->
 						if (documentSnapShot.exists()) {
-							var latitud =
+							val latitud =
 								location.put("latitud", documentSnapShot.getString("latitud"))
 							Logger.d("latitud >>> $latitud")
-							var longitud =
+							val longitud =
 								location.put("longitud", documentSnapShot.getString("longitud"))
 							Logger.d("latitud >>> $longitud")
 						}
@@ -108,27 +108,41 @@ fun getCurrentUserName(context : Context) : String? {
 	return null
 }
 
-
 //we will get all phones that the current user has associated
-fun getPhonesByUser(curretUser:String):Array<Phone>{
-	val phones:MutableList<Phone>
-	db.collection("phones").whereEqualTo("user",curretUser)
-		.get().addOnSuccessListener { documents->
-			for (document in documents)
+fun getPhonesByUser(curretUser : String) : MutableList<Phone> {
+	Logger.d("we are in getPhonesByUser")
+	val phones = mutableListOf<Phone>()
+	var location : LatLng? = null
+	db.collection("phones").whereEqualTo("user", curretUser)
+		.get().addOnSuccessListener { documents ->
+			for (document in documents) {
+				Logger.d("document--> ${document.getString("androidID")}")
 				phones.add(
 					Phone(
-					document.getBoolean("GPSLocationState") ,
-					document.getString("androidID"),
-						Ubicacion()
+						gpsLocationState = document.getBoolean("GPSLocationState"),
+						androidId = document.getString("androidID"),
+						ubicacion = Ubicacion(
+							ubicacion = document.getString("latitud")?.let {
+								document.getDouble("longitud")?.let { it1 ->
+									LatLng(
+										it.toDouble(),
+										it1.toDouble()
+									)
+								}
+							},
+							titulo = document.getString("androidID"),
+							descripcion = "device location"
+						),
+						user = document.getString("user")
 
-				)
+					)
 				)
 
+			}
 		}
-
+	return phones
 
 }
-
 
 fun getDb() : FirebaseFirestore {
 	return Firebase.firestore

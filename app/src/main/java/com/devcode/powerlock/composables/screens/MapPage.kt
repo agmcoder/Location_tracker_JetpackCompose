@@ -13,16 +13,20 @@ import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.LifecycleObserver
 import androidx.navigation.NavController
 import com.devcode.powerlock.composables.MapToolBar
+import com.devcode.powerlock.model.Phone
 import com.devcode.powerlock.model.getAndroidId
+import com.devcode.powerlock.model.getCurrentUserName
+import com.devcode.powerlock.model.getPhonesByUser
 import com.google.android.libraries.maps.CameraUpdateFactory
 import com.google.android.libraries.maps.GoogleMap
 import com.google.android.libraries.maps.MapView
 import com.google.android.libraries.maps.model.LatLng
 import com.google.android.libraries.maps.model.MarkerOptions
+import com.orhanobut.logger.Logger
 
 @Composable
 fun MapPage(navController : NavController) {
-    var phones= arrayListOf<>()
+
 	Scaffold(
 		topBar = { MapToolBar() },
 		content = { MapContent() },
@@ -40,8 +44,16 @@ fun MapContent() {
 //-------------------------------------------------------------------------------------------
 @Composable
 fun MyMap(onReady : (GoogleMap) -> Unit) {
-	val context = LocalContext.current
-    var position=LatLng(19.444444,-4.444444)
+    val context = LocalContext.current
+    var phones= getCurrentUserName(context)?.let { getPhonesByUser(it) }
+    Logger.d("get current user on mymap by getCurrentUserName")
+    if (phones != null) {
+        Logger.d("obtenemos position inicial mediante ${phones.get(0).ubicacion.ubicacion.toString()}")
+    }
+    else{
+        Logger.d("phones is empty")
+    }
+    val position: LatLng? = phones?.get(0)?.ubicacion?.ubicacion
     val mapView= remember {MapView(context)}
     val lifecycle= LocalLifecycleOwner.current.lifecycle
     lifecycle.addObserver(rememberMapLifeCycle(map=mapView))
@@ -53,9 +65,11 @@ fun MyMap(onReady : (GoogleMap) -> Unit) {
                     //inicio de coordenadas
                     googleMap
                         .moveCamera(CameraUpdateFactory.newLatLngZoom(position,zoomLevel))
-                    googleMap.addMarker(MarkerOptions().position(position)
-                        .title(getAndroidId(context).toString())
-                        .snippet(position.toString())
+                    googleMap.addMarker(position?.let { it1 ->
+                        MarkerOptions().position(it1)
+                            .title(getAndroidId(context).toString())
+                            .snippet(position.toString())
+                    }
                         //.icon(Icons.Default.Phone)
                     )
                 }
