@@ -13,10 +13,7 @@ import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.LifecycleObserver
 import androidx.navigation.NavController
 import com.devcode.powerlock.composables.MapToolBar
-import com.devcode.powerlock.model.Phone
-import com.devcode.powerlock.model.getAndroidId
-import com.devcode.powerlock.model.getCurrentUserName
-import com.devcode.powerlock.model.getPhonesByUser
+import com.devcode.powerlock.model.*
 import com.google.android.libraries.maps.CameraUpdateFactory
 import com.google.android.libraries.maps.GoogleMap
 import com.google.android.libraries.maps.MapView
@@ -37,76 +34,67 @@ fun MapPage(navController : NavController) {
 @Preview(name = "map content")
 @Composable
 fun MapContent() {
+	val context = LocalContext.current
 	//GoogleMaps()
-    MyMap {}
+
+	MyMap {}
 }
 
 //-------------------------------------------------------------------------------------------
 @Composable
 fun MyMap(onReady : (GoogleMap) -> Unit) {
-    val context = LocalContext.current
-    var phones= getCurrentUserName(context)?.let { getPhonesByUser(it) }
-    Logger.d("get current user on mymap by getCurrentUserName")
-    if (phones != null) {
-        Logger.d("obtenemos position inicial mediante ${phones.get(0).ubicacion.ubicacion.toString()}")
-    }
-    else{
-        Logger.d("phones is empty")
-    }
-    val position: LatLng? = phones?.get(0)?.ubicacion?.ubicacion
-    val mapView= remember {MapView(context)}
-    val lifecycle= LocalLifecycleOwner.current.lifecycle
-    lifecycle.addObserver(rememberMapLifeCycle(map=mapView))
-    AndroidView(
-        factory ={
-            mapView.apply {
-                mapView.getMapAsync{googleMap->
-                    val zoomLevel=10f
-                    //inicio de coordenadas
-                    googleMap
-                        .moveCamera(CameraUpdateFactory.newLatLngZoom(position,zoomLevel))
-                    googleMap.addMarker(position?.let { it1 ->
-                        MarkerOptions().position(it1)
-                            .title(getAndroidId(context).toString())
-                            .snippet(position.toString())
-                    }
-                        //.icon(Icons.Default.Phone)
-                    )
-                }
-            }
-        }
-    )
-    
+	val context = LocalContext.current
+	getLocationByAndroidID(context, object : MyCallback {
+		override fun onCallback(value : LatLng) {
+            Logger.d("$value oncallbackvalue")
+		}
+	})
+    val position=LatLng(23.34,34.23)
+
+	Logger.d("we are in mymap")
+
+	val mapView = remember { MapView(context) }
+	val lifecycle = LocalLifecycleOwner.current.lifecycle
+	lifecycle.addObserver(rememberMapLifeCycle(map = mapView))
+	AndroidView(
+		factory = {
+			mapView.apply {
+				mapView.getMapAsync { googleMap ->
+					val zoomLevel = 3f
+					//inicio de coordenadas
+					googleMap
+						.moveCamera(CameraUpdateFactory.newLatLngZoom(position, zoomLevel))
+					googleMap.addMarker(position.let { it1 ->
+						MarkerOptions().position(it1)
+							.title(getAndroidId(context).toString())
+							.snippet(position.toString())
+					}
+						//.icon(Icons.Default.Phone)
+					)
+				}
+			}
+		}
+	)
+
 }
 
 @Composable
-fun rememberMapLifeCycle(map:MapView):LifecycleObserver {
+fun rememberMapLifeCycle(map : MapView) : LifecycleObserver {
 
-
-    return remember{
-        LifecycleEventObserver{source, event ->
-        when(event){
-            Lifecycle.Event.ON_CREATE->map.onCreate(Bundle())
-            Lifecycle.Event.ON_START->map.onStart()
-            Lifecycle.Event.ON_RESUME->map.onResume()
-            Lifecycle.Event.ON_PAUSE->map.onPause()
-            Lifecycle.Event.ON_STOP->map.onStop()
-            Lifecycle.Event.ON_DESTROY->map.onDestroy()
-            Lifecycle.Event.ON_ANY->throw java.lang.IllegalStateException()
-        }
-    }}
+	return remember {
+		LifecycleEventObserver { source, event ->
+			when (event) {
+				Lifecycle.Event.ON_CREATE -> map.onCreate(Bundle())
+				Lifecycle.Event.ON_START -> map.onStart()
+				Lifecycle.Event.ON_RESUME -> map.onResume()
+				Lifecycle.Event.ON_PAUSE -> map.onPause()
+				Lifecycle.Event.ON_STOP -> map.onStop()
+				Lifecycle.Event.ON_DESTROY -> map.onDestroy()
+				Lifecycle.Event.ON_ANY -> throw java.lang.IllegalStateException()
+			}
+		}
+	}
 }
-
-
-
-
-
-
-
-
-
-
-
 
 /*//---------------------------------------------------------------------------------------
 @Preview(name = "googlemaps")

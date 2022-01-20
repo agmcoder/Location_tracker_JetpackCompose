@@ -60,29 +60,28 @@ fun getGPSLocationStateToSharedPreferences(
 
 }
 
-fun getLatLong(userName : String) : HashMap<String?, String?> {
-	var location : HashMap<String?, String?> = hashMapOf()
-
-	db.collection("phones").whereEqualTo("user", userName).get()
-		.addOnSuccessListener { documents ->
-			for (document in documents) {
-				Logger.d("${document.id}=>${document.data}")
-				db.collection("phones").document(document.id).get()
-					.addOnSuccessListener { documentSnapShot ->
-						if (documentSnapShot.exists()) {
-							val latitud =
-								location.put("latitud", documentSnapShot.getString("latitud"))
-							Logger.d("latitud >>> $latitud")
-							val longitud =
-								location.put("longitud", documentSnapShot.getString("longitud"))
-							Logger.d("latitud >>> $longitud")
-						}
-					}
+fun getLocationByAndroidID(context : Context,myCallback : MyCallback)  {
+	Logger.d("we entry into getLocationByandroidid")
+	val androidID = getAndroidId(context = context)
+	if (androidID != null) {
+		Logger.d("if android id not null")
+		db.collection("phones")
+			.document(androidID)
+			.get().addOnSuccessListener { documentSnapShot ->
+				var location:LatLng
+				Logger.d("location =Latln")
+				location = LatLng(
+					documentSnapShot.getString("latitud")!!.toDouble(),
+					documentSnapShot.getString("longitud")!!.toDouble()
+				)
+				myCallback.onCallback(location)
+				Logger.d("addonsucceslistener passed")
 			}
-		}
+			.addOnFailureListener {
+				Logger.d("error getting location android id -> $it")
+			}
 
-
-	return location
+	}
 }
 
 fun getCurrentUserName(context : Context) : String? {
@@ -109,11 +108,13 @@ fun getCurrentUserName(context : Context) : String? {
 }
 
 //we will get all phones that the current user has associated
-fun getPhonesByUser(curretUser : String) : MutableList<Phone> {
-	Logger.d("we are in getPhonesByUser")
+fun getPhonesByUser(context : Context) : MutableList<Phone> {
+	val currentUser = getCurrentUserName(context)
+	Logger.d("we are in getPhonesByUser and current user is $currentUser")
 	val phones = mutableListOf<Phone>()
 	var location : LatLng? = null
-	db.collection("phones").whereEqualTo("user", curretUser)
+	db.collection("phones")
+		.whereEqualTo("user", currentUser)
 		.get().addOnSuccessListener { documents ->
 			for (document in documents) {
 				Logger.d("document--> ${document.getString("androidID")}")
@@ -123,7 +124,7 @@ fun getPhonesByUser(curretUser : String) : MutableList<Phone> {
 						androidId = document.getString("androidID"),
 						ubicacion = Ubicacion(
 							ubicacion = document.getString("latitud")?.let {
-								document.getDouble("longitud")?.let { it1 ->
+								document.getString("longitud")?.let { it1 ->
 									LatLng(
 										it.toDouble(),
 										it1.toDouble()
@@ -140,6 +141,7 @@ fun getPhonesByUser(curretUser : String) : MutableList<Phone> {
 
 			}
 		}
+		.addOnFailureListener { Logger.d("error getting usersbyphone--->  $it") }
 	return phones
 
 }
@@ -147,4 +149,7 @@ fun getPhonesByUser(curretUser : String) : MutableList<Phone> {
 fun getDb() : FirebaseFirestore {
 	return Firebase.firestore
 
+}
+interface MyCallback{
+	fun onCallback(value:LatLng)
 }
