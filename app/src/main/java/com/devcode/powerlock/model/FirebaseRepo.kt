@@ -18,8 +18,8 @@ private var db = Firebase.firestore
 
 suspend fun saveLocation(location : LatLng, androidID : String)= runCatching {
 	val locationList = hashMapOf(
-		"longitud" to "${location.latitude}",
-		"latitud" to "${location.longitude}"
+		"latitud" to "${location.latitude}",
+		"longitud" to "${location.longitude}"
 	)
 	db.collection("phones")
 		.document(androidID).set(locationList).await()
