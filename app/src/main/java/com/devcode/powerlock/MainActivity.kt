@@ -21,8 +21,9 @@ import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.orhanobut.logger.AndroidLogAdapter
 import com.orhanobut.logger.Logger
+import dagger.hilt.android.AndroidEntryPoint
 import java.util.*
-
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 	private val FINE_LOCATION_CODE = 123
 	private val COARSE_LOCATION_CODE = 113
@@ -46,7 +47,7 @@ class MainActivity : ComponentActivity() {
 				val sharedPreferences=getSharedPreferences("sharedPreferences", MODE_PRIVATE)
 				val ed : SharedPreferences.Editor = sharedPreferences.edit()
 				val androidID= getAndroidId(LocalContext.current)
-				getGPSLocationStateToSharedPreferences( androidID,sharedPreferences)
+				//getGPSLocationStateToSharedPreferences( androidID,sharedPreferences)
 
 
 

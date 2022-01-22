@@ -46,7 +46,7 @@ fun MyMap(onReady : (GoogleMap) -> Unit) {
 	val context = LocalContext.current
 	getLocationByAndroidID(context, object : MyCallback {
 		override fun onCallback(value : LatLng) {
-            Logger.d("$value oncallbackvalue")
+            Logger.d("$value onCallbackvalue")
 		}
 	})
     val position=LatLng(23.34,34.23)

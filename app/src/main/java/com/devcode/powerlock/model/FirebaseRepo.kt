@@ -11,18 +11,20 @@ import com.google.firebase.firestore.SetOptions
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.orhanobut.logger.Logger
+import kotlinx.coroutines.tasks.await
 
 @SuppressLint("StaticFieldLeak")
 private var db = Firebase.firestore
 
-fun saveLocation(location : Location, androidID : String) {
+suspend fun saveLocation(location : LatLng, androidID : String)= runCatching {
 	val locationList = hashMapOf(
 		"longitud" to "${location.latitude}",
 		"latitud" to "${location.longitude}"
 	)
-	db.collection("phones").document(androidID).set(locationList, SetOptions.merge())
+	db.collection("phones")
+		.document(androidID).set(locationList).await()
 
-}
+}.isSuccess
 
 fun setGPSLocationState(state : Boolean, androidID : String) {
 	val estado = hashMapOf(
@@ -36,6 +38,7 @@ fun getGPSLocationStateToSharedPreferences(
 	androidID : String?,
 	sharedPreferences : SharedPreferences
 ) {
+	try {
 	// Create a reference to the document wanted
 	val ed : SharedPreferences.Editor = sharedPreferences.edit()
 	val docRef = db.collection("phones").document(androidID!!)
@@ -58,9 +61,14 @@ fun getGPSLocationStateToSharedPreferences(
 			Logger.e("failure getGPSLocatonState--> ${it.toString()}")
 		}
 
+} catch (e: Exception) {
+
 }
 
-fun getLocationByAndroidID(context : Context,myCallback : MyCallback)  {
+
+}
+
+fun getLocationByAndroidID(context : Context, myCallback : MyCallback) {
 	Logger.d("we entry into getLocationByandroidid")
 	val androidID = getAndroidId(context = context)
 	if (androidID != null) {
@@ -68,7 +76,7 @@ fun getLocationByAndroidID(context : Context,myCallback : MyCallback)  {
 		db.collection("phones")
 			.document(androidID)
 			.get().addOnSuccessListener { documentSnapShot ->
-				var location:LatLng
+				var location : LatLng
 				Logger.d("location =Latln")
 				location = LatLng(
 					documentSnapShot.getString("latitud")!!.toDouble(),
@@ -150,6 +158,7 @@ fun getDb() : FirebaseFirestore {
 	return Firebase.firestore
 
 }
-interface MyCallback{
-	fun onCallback(value:LatLng)
+
+interface MyCallback {
+	fun onCallback(value : LatLng)
 }
