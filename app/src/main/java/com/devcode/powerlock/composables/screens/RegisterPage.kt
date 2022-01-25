@@ -1,6 +1,5 @@
- package com.learnandroid.powerlock.composables
+package com.learnandroid.powerlock.composables
 
-import android.widget.Toast
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -28,201 +27,188 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.devcode.powerlock.R
-import com.devcode.powerlock.model.emailPasswordRegister
+import com.devcode.powerlock.composables.components.OutLinedTextFieldCustom
+import com.devcode.powerlock.composables.components.OutLinedTextFieldCustomPassword
+import com.devcode.powerlock.model.registerChecker
 import com.devcode.powerlock.theme.primaryColor
-import com.google.firebase.auth.FirebaseAuth
-
 
 @Composable
-fun RegisterPage(navController: NavController) {
+fun RegisterPage(navController : NavController) {
 
-    val image = painterResource(id = R.drawable.firebase)
+	val image = painterResource(id = R.drawable.firebase)
 
-    remember { mutableStateOf("") }
-    val emailValue = remember { mutableStateOf("") }
-    remember { mutableStateOf("") }
-    val passwordValue = remember { mutableStateOf("") }
-    val confirmPasswordValue = remember { mutableStateOf("") }
+	remember { mutableStateOf("") }
+	val emailValue = remember { mutableStateOf("") }
+	remember { mutableStateOf("") }
+	val passwordValue = remember { mutableStateOf("") }
+	val confirmPasswordValue = remember { mutableStateOf("") }
+	val context = LocalContext.current
+	val scrollState = rememberScrollState()
+	val passwordVisibility = remember { mutableStateOf(false) }
+	val confirmPasswordVisibility = remember { mutableStateOf(false) }
+	val focusRequester = remember { FocusRequester() }
 
-    val context = LocalContext.current
-    val scrollState = rememberScrollState()
+	Box(
+		modifier = Modifier.fillMaxSize(),
+		contentAlignment = Alignment.BottomCenter
+	) {
+		Column {
 
-    val passwordVisibility = remember { mutableStateOf(false) }
-    val confirmPasswordVisibility = remember { mutableStateOf(false) }
-    val focusRequester = remember { FocusRequester() }
-
-    Box(
-        modifier = Modifier.fillMaxSize(),
-        contentAlignment = Alignment.BottomCenter
-    ) {
-        Column() {
-
-
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .fillMaxHeight(0.3f)
-                    .background(Color.White),
-                contentAlignment = Alignment.TopCenter
-            ) {
-                Image(
-                    painter = image,
-                    contentDescription = ""
-                )
-            }
+			Box(
+				modifier = Modifier
+					.fillMaxWidth()
+					.fillMaxHeight(0.3f)
+					.background(Color.White),
+				contentAlignment = Alignment.TopCenter
+			) {
+				Image(
+					painter = image,
+					contentDescription = ""
+				)
+			}
 
 
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .clip(RoundedCornerShape(topStart = 30.dp, topEnd = 30.dp))
-                    .background(Color.Gray)
-                    .padding(10.dp),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center
+			Column(
+				modifier = Modifier
+					.fillMaxSize()
+					.clip(RoundedCornerShape(topStart = 30.dp, topEnd = 30.dp))
+					.background(Color.Gray)
+					.padding(10.dp),
+				horizontalAlignment = Alignment.CenterHorizontally,
+				verticalArrangement = Arrangement.Center
 
-            ) {
-                Text(
-                    text = "Sign Up",
-                    fontSize = 30.sp,
-                    style = TextStyle(
-                        fontWeight = FontWeight.Bold,
-                        letterSpacing = 2.sp
-                    )
-                )
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .verticalScroll(state = scrollState),
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
+			) {
+				Text(
+					text = "Sign Up",
+					fontSize = 30.sp,
+					style = TextStyle(
+						fontWeight = FontWeight.Bold,
+						letterSpacing = 2.sp
+					)
+				)
+				Column(
+					modifier = Modifier
+						.fillMaxSize()
+						.verticalScroll(state = scrollState),
+					verticalArrangement = Arrangement.Center,
+					horizontalAlignment = Alignment.CenterHorizontally
+				) {
 
-                    Spacer(modifier = Modifier.padding(20.dp))
-                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+					com.devcode.powerlock.composables.components.Spacer()
+					Column(horizontalAlignment = Alignment.CenterHorizontally) {
+						//userName
+						OutlinedTextField(
+							value = emailValue.value,
+							keyboardOptions = KeyboardOptions(
+								keyboardType = KeyboardType.Email
+							),
+							onValueChange = { emailValue.value = it },
+							label = { Text(text = "Email Address", color = Color.Black) },
+							placeholder = { Text(text = "Email Address", color = Color.Black) },
+							singleLine = true,
+							modifier = Modifier
+								.fillMaxWidth(0.8f)
+								.focusRequester(focusRequester = focusRequester)
+						)
 
+						//firstPasswordValue
+						OutLinedTextFieldCustomPassword(passwordValue,
+							"prueba",
+							"masprueba",
+							passwordVisibility)
+						OutlinedTextField(
+							value = passwordValue.value,
+							onValueChange = { passwordValue.value = it },
+							keyboardOptions = KeyboardOptions(
+								keyboardType = KeyboardType.Password
+							),
+							label = { Text(text = "Password", color = Color.Black) },
+							placeholder = { Text(text = "Password", color = Color.Black) },
+							singleLine = true,
+							modifier = Modifier
+								.fillMaxWidth(0.8f)
+								.focusRequester(focusRequester = focusRequester),
+							trailingIcon = {
+								IconButton(onClick = {
+									passwordVisibility.value = !passwordVisibility.value
+								}) {
+									Icon(
+										imageVector = ImageVector.vectorResource(id = R.drawable.password_eye),
+										contentDescription = "",
+										tint = if (passwordVisibility.value) primaryColor else Color.Black
+									)
 
-                        OutlinedTextField(
-                            value = emailValue.value,
-                            keyboardOptions = KeyboardOptions(
-                                keyboardType = KeyboardType.Email
-                            ),
-                            onValueChange = { emailValue.value = it },
-                            label = { Text(text = "Email Address", color = Color.Black) },
-                            placeholder = { Text(text = "Email Address", color = Color.Black) },
-                            singleLine = true,
-                            modifier = Modifier
-                                .fillMaxWidth(0.8f)
-                                .focusRequester(focusRequester = focusRequester)
-                        )
+								}
+							},
+							visualTransformation = if (passwordVisibility.value) VisualTransformation.None
+							else PasswordVisualTransformation()
+						)
+						//confirmPassword
+						OutlinedTextField(
+							value = confirmPasswordValue.value,
+							onValueChange = { confirmPasswordValue.value = it },
+							keyboardOptions = KeyboardOptions(
+								keyboardType = KeyboardType.Password
+							),
+							label = { Text(text = "Confirm Password", color = Color.Black) },
+							placeholder = { Text(text = "Confirm Password", color = Color.Black) },
+							singleLine = true,
+							modifier = Modifier.fillMaxWidth(0.8f),
+							trailingIcon = {
+								IconButton(onClick = {
+									confirmPasswordVisibility.value =
+										!confirmPasswordVisibility.value
+								}) {
+									Icon(
+										imageVector = ImageVector.vectorResource(id = R.drawable.password_eye),
+										contentDescription = "",
+										tint = if (confirmPasswordVisibility.value) primaryColor else Color.Black
 
+									)
 
+								}
+							},
+							visualTransformation = if (confirmPasswordVisibility.value) VisualTransformation.None
+							else PasswordVisualTransformation()
+						)
+						Spacer(modifier = Modifier.padding(10.dp))
+						Button(
+							onClick = {
+								registerChecker(
+									context,
+									navController,
+									emailValue,
+									passwordValue,
+									confirmPasswordValue
+								)
+							}, modifier = Modifier
+								.fillMaxWidth(0.8f)
+								.height(50.dp)
+						) {
+							Text(text = "Sign Up", fontSize = 20.sp)
+						}
+						Spacer(modifier = Modifier.padding(20.dp))
+						Text(
+							text = "Login Instead",
+							modifier = Modifier.clickable(onClick = {
+								navController.navigate("login_page") {
+									// popUpTo = navController.graph.startDestination
+									//launchSingleTop = true
+								}
+							})
+						)
+						com.devcode.powerlock.composables.components.Spacer()
 
-                        OutlinedTextField(
-                            value = passwordValue.value,
-                            onValueChange = { passwordValue.value = it },
-                            keyboardOptions = KeyboardOptions(
-                                keyboardType = KeyboardType.Password
-                            ),
-                            label = { Text(text = "Password", color = Color.Black) },
-                            placeholder = { Text(text = "Password", color = Color.Black) },
-                            singleLine = true,
-                            modifier = Modifier
-                                .fillMaxWidth(0.8f)
-                                .focusRequester(focusRequester = focusRequester),
-                            trailingIcon = {
-                                IconButton(onClick = {
-                                    passwordVisibility.value = !passwordVisibility.value
-                                }) {
-                                    Icon(
-                                        imageVector = ImageVector.vectorResource(id = R.drawable.password_eye),
-                                        contentDescription = "",
-                                        tint = if (passwordVisibility.value) primaryColor else Color.Black
-                                    )
+					}
+					com.devcode.powerlock.composables.components.Spacer()
+				}
 
-
-                                }
-                            },
-                            visualTransformation = if (passwordVisibility.value) VisualTransformation.None
-                            else PasswordVisualTransformation()
-                        )
-
-                        OutlinedTextField(
-                            value = confirmPasswordValue.value,
-                            onValueChange = { confirmPasswordValue.value = it },
-                            keyboardOptions = KeyboardOptions(
-                                keyboardType = KeyboardType.Password
-                            ),
-                            label = { Text(text = "Confirm Password", color = Color.Black) },
-                            placeholder = { Text(text = "Confirm Password", color = Color.Black) },
-                            singleLine = true,
-                            modifier = Modifier.fillMaxWidth(0.8f),
-                            trailingIcon = {
-                                IconButton(onClick = {
-                                    confirmPasswordVisibility.value =
-                                        !confirmPasswordVisibility.value
-                                }) {
-                                    Icon(
-                                        imageVector = ImageVector.vectorResource(id = R.drawable.password_eye),
-                                        contentDescription = "",
-                                        tint = if (confirmPasswordVisibility.value) primaryColor else Color.Gray
-
-                                    )
-
-
-                                }
-                            },
-                            visualTransformation = if (confirmPasswordVisibility.value) VisualTransformation.None
-                            else PasswordVisualTransformation()
-                        )
-                        Spacer(modifier = Modifier.padding(10.dp))
-                        Button(
-                            onClick = {
-                                if (emailValue.value.isEmpty() ||
-                                    passwordValue.value.isEmpty() ||
-                                    confirmPasswordValue.value.isEmpty() ||
-                                    passwordValue.value != confirmPasswordValue.value
-                                ) {
-                                    Toast.makeText(
-                                        context, "incorrect fields",
-                                        Toast.LENGTH_SHORT
-                                    ).show()
-
-                                } else {
-                                    emailPasswordRegister(
-                                        context,
-                                        navController,
-                                        emailValue.value,
-                                        passwordValue.value
-                                    )
-
-                                }
-                            }, modifier = Modifier
-                                .fillMaxWidth(0.8f)
-                                .height(50.dp)
-                        ) {
-                            Text(text = "Sign Up", fontSize = 20.sp)
-                        }
-                        Spacer(modifier = Modifier.padding(20.dp))
-                        Text(
-                            text = "Login Instead",
-                            modifier = Modifier.clickable(onClick = {
-                                navController.navigate("login_page") {
-                                    // popUpTo = navController.graph.startDestination
-                                    //launchSingleTop = true
-                                }
-                            })
-                        )
-                        Spacer(modifier = Modifier.padding(20.dp))
-
-                    }
-                    Spacer(modifier = Modifier.padding(100.dp))
-                }
-
-            }
-        }
-    }
+			}
+		}
+	}
 }
+
+
 
 
 

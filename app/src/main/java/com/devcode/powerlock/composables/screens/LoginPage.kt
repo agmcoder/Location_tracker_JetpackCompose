@@ -1,8 +1,7 @@
-package com.devcode.powerlock.composables
+package com.devcode.powerlock.composables.screens
 
 import android.annotation.SuppressLint
 import android.content.SharedPreferences
-import android.widget.Toast
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -37,7 +36,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.devcode.powerlock.R
-import com.devcode.powerlock.model.emailPasswordLogin
+import com.devcode.powerlock.composables.components.Spacer
+import com.devcode.powerlock.model.loginChecker
 import com.devcode.powerlock.theme.primaryColor
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 
@@ -55,28 +55,28 @@ fun LoginPage(navController : NavController, sharedPreferences : SharedPreferenc
 	//val image = imageResource(id= R.drawable.logo)
 	val context = LocalContext.current
 	val focusManager = LocalFocusManager.current
-	val image = painterResource(com.devcode.powerlock.R.drawable.logo)
+	val image = painterResource(R.drawable.logo)
 	var emailValue : MutableState<String>
 	var passwordValue : MutableState<String>
-	if (rememberUser != null && checkBoxState.value) {
-		emailValue = rememberSaveable { mutableStateOf(rememberUser) }
-
-	} else {
-		emailValue = rememberSaveable { mutableStateOf("") }
-
-	}
-	if (rememberPassword != null && checkBoxState.value) {
-		passwordValue = rememberSaveable { mutableStateOf(rememberPassword) }
-
-	} else {
-		passwordValue = rememberSaveable { mutableStateOf("") }
-
-	}
-
 	val passwordVisibility = remember { mutableStateOf(false) }
 	val focusRequester = remember { FocusRequester() }
 	val scrollState = rememberScrollState()
 
+
+	emailValue = if (rememberUser != null && checkBoxState.value) {
+		rememberSaveable { mutableStateOf(rememberUser) }
+
+	} else
+		rememberSaveable { mutableStateOf("") }
+
+
+	passwordValue = if (rememberPassword != null && checkBoxState.value) {
+		rememberSaveable { mutableStateOf(rememberPassword) }
+
+	} else
+		rememberSaveable { mutableStateOf("") }
+
+	//we start to implement login screen UI-->
 
 	Box(
 
@@ -223,26 +223,7 @@ fun LoginPage(navController : NavController, sharedPreferences : SharedPreferenc
 					Button(
 						onClick = {
 
-							if (emailValue.value.isEmpty() ||
-								passwordValue.value.isEmpty()
-							) {
-								Toast.makeText(
-									context, "campos vacios",
-									Toast.LENGTH_SHORT
-								).show()
-							} else {
-								com.orhanobut.logger.Logger.i("else del boton signup")
-								var userMail : String = emailValue.value
-								var userPassword : String = passwordValue.value
-								emailPasswordLogin(
-									context,
-									userMail,
-									userPassword,
-									navController,
-									ed
-								)
-
-							}
+							loginChecker(emailValue, passwordValue, context, navController, ed)
 
 						},
 						modifier = Modifier
@@ -253,7 +234,7 @@ fun LoginPage(navController : NavController, sharedPreferences : SharedPreferenc
 					}
 
 
-					Spacer(modifier = Modifier.padding(20.dp))
+					Spacer()
 					Row(
 						modifier = Modifier.fillMaxWidth(),
 						horizontalArrangement = Arrangement.Center
@@ -265,6 +246,11 @@ fun LoginPage(navController : NavController, sharedPreferences : SharedPreferenc
 							onCheckedChange =
 							{
 								checkBoxState.value = it
+								if (!checkBoxState.value) {
+									ed.putString("user", "")
+									ed.putString("password", "")
+									ed.apply()
+								}
 								ed.putBoolean("rememberUser", checkBoxState.value)
 								ed.apply()
 
@@ -272,7 +258,7 @@ fun LoginPage(navController : NavController, sharedPreferences : SharedPreferenc
 						)
 
 					}
-					Spacer(modifier = Modifier.padding(20.dp))
+					Spacer()
 					Text(
 						text = "Create An Account",
 						modifier = Modifier.clickable(onClick = {
@@ -284,7 +270,7 @@ fun LoginPage(navController : NavController, sharedPreferences : SharedPreferenc
 					)
 
 
-					Spacer(modifier = Modifier.padding(200.dp))
+					Spacer()
 
 				}
 			}
