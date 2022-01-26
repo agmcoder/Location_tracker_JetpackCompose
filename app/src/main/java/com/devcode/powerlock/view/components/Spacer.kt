@@ -1,4 +1,4 @@
-package com.devcode.powerlock.composables.components
+package com.devcode.powerlock.view.components
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable

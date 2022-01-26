@@ -6,7 +6,7 @@ import android.widget.Toast
 import androidx.compose.runtime.MutableState
 import androidx.navigation.NavController
 
-fun loginChecker(
+ fun loginChecker(
 	emailValue : MutableState<String>,
 	passwordValue : MutableState<String>,
 	context : Context,

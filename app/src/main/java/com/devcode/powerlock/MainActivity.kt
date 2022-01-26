@@ -29,9 +29,9 @@ class MainActivity : ComponentActivity() {
 	private val COARSE_LOCATION_CODE = 113
 	lateinit var fusedLocationProviderClient : FusedLocationProviderClient
 
+	@OptIn(ExperimentalPermissionsApi::class)
 	@SuppressLint("CommitPrefEdits")
 	@RequiresApi(Build.VERSION_CODES.Q)
-	@ExperimentalPermissionsApi
 	override fun onCreate(savedInstanceState : Bundle?) {
 		super.onCreate(savedInstanceState)
 		//not implemented yet. fusedLocation

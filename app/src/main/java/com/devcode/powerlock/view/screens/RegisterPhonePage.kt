@@ -1,4 +1,4 @@
-package com.devcode.powerlock.composables.screens
+package com.devcode.powerlock.view.screens
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -20,8 +20,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.devcode.powerlock.R
-import com.devcode.powerlock.composables.Divisor
-import com.devcode.powerlock.composables.MenuToolbar
+import com.devcode.powerlock.view.Divisor
+import com.devcode.powerlock.view.MenuToolbar
 import com.devcode.powerlock.model.getAndroidId
 
 import com.devcode.powerlock.theme.whiteBackground

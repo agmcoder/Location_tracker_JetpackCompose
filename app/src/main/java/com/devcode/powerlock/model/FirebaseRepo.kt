@@ -3,20 +3,42 @@ package com.devcode.powerlock.model
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.SharedPreferences
-import android.location.Location
+import android.os.Build
 import com.google.android.libraries.maps.model.LatLng
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.SetOptions
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.orhanobut.logger.Logger
+import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 
 @SuppressLint("StaticFieldLeak")
 private var db = Firebase.firestore
 
-suspend fun saveLocation(location : LatLng, androidID : String)= runCatching {
+@DelicateCoroutinesApi
+fun checkIfThereIsAnotherEqualAndroidId(context : Context) : Boolean {
+	var boolean = false
+	 GlobalScope.launch(IO) {
+		val job = launch { db.collection("phones").document(FirebaseAuth.getInstance().currentUser?.uid.orEmpty())
+			.get().await()?.let { documentSnapshot ->
+				boolean = documentSnapshot.getString("androidID").equals(getAndroidId(context))
+
+			} ?: run {
+			boolean = false
+			}
+		}
+		 job.join()
+	}
+	return boolean
+}
+
+suspend fun saveLocation(location : LatLng, androidID : String) = runCatching {
 	val locationList = hashMapOf(
 		"latitud" to "${location.latitude}",
 		"longitud" to "${location.longitude}"
@@ -39,32 +61,33 @@ fun getGPSLocationStateToSharedPreferences(
 	sharedPreferences : SharedPreferences
 ) {
 	try {
-	// Create a reference to the document wanted
-	val ed : SharedPreferences.Editor = sharedPreferences.edit()
-	val docRef = db.collection("phones").document(androidID!!)
-	// Create a query against the collection.
-	var state : Boolean? = false
-	Logger.d("step before docRef.get")
-	docRef.get()
-		.addOnSuccessListener { document ->
-			if (document.exists()) {
-				state = document.getBoolean("GPSLocationState")
-				Logger.d("document exist getGPSLocationState value --> $state")
-				ed.putBoolean("GPS", state!!)
-				ed.apply()
+		// Create a reference to the document wanted
+		val ed : SharedPreferences.Editor = sharedPreferences.edit()
+		val docRef = db.collection("phones").document(androidID!!)
+		// Create a query against the collection.
+		var state : Boolean? = false
+		Logger.d("step before docRef.get")
+		docRef.get()
+			.addOnSuccessListener { document ->
+				if (document.exists()) {
+					state = document.getBoolean("GPSLocationState")
+					Logger.d("document exist getGPSLocationState value --> $state")
+					ed.putBoolean("GPS", state!!)
+					if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD) {
+						ed.apply()
+					}
 
-			} else {
-				Logger.e("document does not exists")
+				} else {
+					Logger.e("document does not exists")
+				}
 			}
-		}
-		.addOnFailureListener {
-			Logger.e("failure getGPSLocatonState--> ${it.toString()}")
-		}
+			.addOnFailureListener {
+				Logger.e("failure getGPSLocatonState--> ${it.toString()}")
+			}
 
-} catch (e: Exception) {
+	} catch (e : Exception) {
 
-}
-
+	}
 
 }
 

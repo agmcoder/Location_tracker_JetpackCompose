@@ -1,17 +1,15 @@
-package com.devcode.powerlock.composables.screens
+package com.devcode.powerlock.view.screens
 
 import android.annotation.SuppressLint
 import android.content.SharedPreferences
+import android.os.Build
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
@@ -34,19 +32,25 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.devcode.powerlock.R
-import com.devcode.powerlock.composables.components.Spacer
+import com.devcode.powerlock.view.components.Spacer
 import com.devcode.powerlock.model.loginChecker
 import com.devcode.powerlock.theme.primaryColor
+import com.devcode.powerlock.view.screens.login.LoginPageViewModel
+import com.devcode.powerlock.view.screens.viewmodel.MenuViewModel
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.launch
 
-@SuppressLint("CommitPrefEdits")
+@SuppressLint("CommitPrefEdits", "NewApi")
 @ExperimentalPermissionsApi
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-fun LoginPage(navController : NavController, sharedPreferences : SharedPreferences) {
+fun LoginPage(navController : NavController, sharedPreferences : SharedPreferences, loginPageViewModel : LoginPageViewModel  = hiltViewModel()) {
 	val ed = sharedPreferences.edit()
+	val coroutineScope= rememberCoroutineScope()
 	val rememberUser = sharedPreferences.getString("user", "")
 	val rememberPassword = sharedPreferences.getString("password", "")
 	val initialCheckBoxState = sharedPreferences.getBoolean("rememberUser", false)
@@ -61,6 +65,7 @@ fun LoginPage(navController : NavController, sharedPreferences : SharedPreferenc
 	val passwordVisibility = remember { mutableStateOf(false) }
 	val focusRequester = remember { FocusRequester() }
 	val scrollState = rememberScrollState()
+
 
 
 	emailValue = if (rememberUser != null && checkBoxState.value) {
@@ -223,7 +228,10 @@ fun LoginPage(navController : NavController, sharedPreferences : SharedPreferenc
 					Button(
 						onClick = {
 
-							loginChecker(emailValue, passwordValue, context, navController, ed)
+							coroutineScope.launch {
+								loginChecker(emailValue, passwordValue, context, navController, ed)
+
+							}
 
 						},
 						modifier = Modifier

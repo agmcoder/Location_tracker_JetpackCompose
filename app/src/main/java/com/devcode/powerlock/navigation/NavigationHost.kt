@@ -7,11 +7,11 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.devcode.powerlock.composables.screens.LoginPage
-import com.devcode.powerlock.composables.screens.MapPage
-import com.devcode.powerlock.composables.screens.MenuPage
+import com.devcode.powerlock.view.screens.LoginPage
+import com.devcode.powerlock.view.screens.MapPage
+import com.devcode.powerlock.view.screens.MenuPage
 import com.learnandroid.powerlock.composables.RegisterPage
-import com.devcode.powerlock.composables.screens.RegisterPhonePage
+import com.devcode.powerlock.view.screens.RegisterPhonePage
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 
 @RequiresApi(Build.VERSION_CODES.Q)

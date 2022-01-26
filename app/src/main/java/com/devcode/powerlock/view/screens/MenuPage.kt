@@ -1,4 +1,4 @@
-package com.devcode.powerlock.composables.screens
+package com.devcode.powerlock.view.screens
 
 import android.content.SharedPreferences
 import android.os.Build
@@ -11,8 +11,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.devcode.powerlock.composables.BottomBar
-import com.devcode.powerlock.composables.MenuToolbar
+import com.devcode.powerlock.view.BottomBar
+import com.devcode.powerlock.view.MenuToolbar
 import com.devcode.powerlock.navigation.getListDestination
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 

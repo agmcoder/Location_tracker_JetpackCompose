@@ -1,9 +1,7 @@
-package com.devcode.powerlock.composables.screens
+package com.devcode.powerlock.view.screens
 
-import android.Manifest
 import android.content.Context
 import android.content.SharedPreferences
-import android.content.pm.PackageManager
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
@@ -22,22 +20,15 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.core.app.ActivityCompat
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.devcode.powerlock.R
-import com.devcode.powerlock.composables.screens.viewmodel.MenuViewModel
+import com.devcode.powerlock.view.screens.viewmodel.MenuViewModel
 import com.devcode.powerlock.model.getAndroidId
-import com.devcode.powerlock.model.saveLocation
-import com.devcode.powerlock.model.setGPSLocationState
 import com.devcode.powerlock.theme.whiteBackground
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.location.LocationServices
 import com.orhanobut.logger.Logger
-import dagger.hilt.android.AndroidEntryPoint
-
 
 @RequiresApi(Build.VERSION_CODES.Q)
 @ExperimentalPermissionsApi

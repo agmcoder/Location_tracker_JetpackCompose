@@ -1,4 +1,4 @@
-package com.devcode.powerlock.composables.screens
+package com.devcode.powerlock.view.screens
 
 import android.os.Bundle
 import androidx.compose.material.Scaffold
@@ -12,7 +12,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.LifecycleObserver
 import androidx.navigation.NavController
-import com.devcode.powerlock.composables.MapToolBar
+import com.devcode.powerlock.view.MapToolBar
 import com.devcode.powerlock.model.*
 import com.google.android.libraries.maps.CameraUpdateFactory
 import com.google.android.libraries.maps.GoogleMap
@@ -44,11 +44,11 @@ fun MapContent() {
 @Composable
 fun MyMap(onReady : (GoogleMap) -> Unit) {
 	val context = LocalContext.current
-	getLocationByAndroidID(context, object : MyCallback {
+	/*getLocationByAndroidID(context, object : MyCallback {
 		override fun onCallback(value : LatLng) {
             Logger.d("$value onCallbackvalue")
 		}
-	})
+	})*/
     val position=LatLng(23.34,34.23)
 
 	Logger.d("we are in mymap")

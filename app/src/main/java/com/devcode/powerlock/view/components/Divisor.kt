@@ -1,4 +1,4 @@
-package com.devcode.powerlock.composables
+package com.devcode.powerlock.view
 
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding

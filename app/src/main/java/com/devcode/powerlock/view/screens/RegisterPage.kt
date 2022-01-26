@@ -27,8 +27,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.devcode.powerlock.R
-import com.devcode.powerlock.composables.components.OutLinedTextFieldCustom
-import com.devcode.powerlock.composables.components.OutLinedTextFieldCustomPassword
+import com.devcode.powerlock.view.components.OutLinedTextFieldCustomPassword
 import com.devcode.powerlock.model.registerChecker
 import com.devcode.powerlock.theme.primaryColor
 
@@ -94,7 +93,7 @@ fun RegisterPage(navController : NavController) {
 					horizontalAlignment = Alignment.CenterHorizontally
 				) {
 
-					com.devcode.powerlock.composables.components.Spacer()
+					com.devcode.powerlock.view.components.Spacer()
 					Column(horizontalAlignment = Alignment.CenterHorizontally) {
 						//userName
 						OutlinedTextField(
@@ -197,10 +196,10 @@ fun RegisterPage(navController : NavController) {
 								}
 							})
 						)
-						com.devcode.powerlock.composables.components.Spacer()
+						com.devcode.powerlock.view.components.Spacer()
 
 					}
-					com.devcode.powerlock.composables.components.Spacer()
+					com.devcode.powerlock.view.components.Spacer()
 				}
 
 			}

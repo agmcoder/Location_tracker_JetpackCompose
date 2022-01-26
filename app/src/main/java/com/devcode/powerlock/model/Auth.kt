@@ -10,6 +10,10 @@ import android.widget.Toast
 import androidx.navigation.NavController
 import com.google.firebase.auth.FirebaseAuth
 import com.orhanobut.logger.Logger
+import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 fun emailPasswordRegister(
     context: Context,
@@ -39,7 +43,8 @@ fun emailPasswordRegister(
 
 }
 
-fun emailPasswordLogin(
+ @OptIn(DelicateCoroutinesApi::class)
+ fun emailPasswordLogin(
     context: Context, userMail: String,
     userPassword: String,
     navController : NavController,
@@ -55,8 +60,22 @@ fun emailPasswordLogin(
                 ed.putString("password", userPassword)
                 ed.apply()
                 Logger.d( "signInWithEmail:success")
-                navController.popBackStack()
-                navController.navigate("menu_page")
+
+                    when(checkIfThereIsAnotherEqualAndroidId(context)){
+                        true->{
+                            navController.popBackStack()
+                            navController.navigate("menu_page")
+                        }
+                        false->{
+                            navController.popBackStack()
+                            navController.navigate("map_page")
+                        }
+
+                    }
+
+
+
+
             } else {
                 Logger.i("else is susccessful")
                 // If sign in fails, display a message to the user.

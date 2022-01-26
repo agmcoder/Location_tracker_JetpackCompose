@@ -1,4 +1,4 @@
-package com.devcode.powerlock.composables
+package com.devcode.powerlock.view
 
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable

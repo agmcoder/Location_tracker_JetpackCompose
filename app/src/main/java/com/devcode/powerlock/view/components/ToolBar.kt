@@ -1,4 +1,4 @@
-package com.devcode.powerlock.composables
+package com.devcode.powerlock.view
 
 import androidx.compose.material.Text
 import androidx.compose.material.TopAppBar
