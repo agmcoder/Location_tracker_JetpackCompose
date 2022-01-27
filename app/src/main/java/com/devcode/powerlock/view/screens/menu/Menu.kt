@@ -23,7 +23,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.devcode.powerlock.R
-import com.devcode.powerlock.view.screens.viewmodel.MenuViewModel
+import com.devcode.powerlock.view.screens.menu.MenuViewModel
 import com.devcode.powerlock.model.getAndroidId
 import com.devcode.powerlock.theme.whiteBackground
 import com.google.accompanist.permissions.ExperimentalPermissionsApi

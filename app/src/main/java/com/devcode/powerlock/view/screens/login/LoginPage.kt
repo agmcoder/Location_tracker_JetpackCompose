@@ -2,7 +2,6 @@ package com.devcode.powerlock.view.screens
 
 import android.annotation.SuppressLint
 import android.content.SharedPreferences
-import android.os.Build
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -39,9 +38,7 @@ import com.devcode.powerlock.view.components.Spacer
 import com.devcode.powerlock.model.loginChecker
 import com.devcode.powerlock.theme.primaryColor
 import com.devcode.powerlock.view.screens.login.LoginPageViewModel
-import com.devcode.powerlock.view.screens.viewmodel.MenuViewModel
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 
 @SuppressLint("CommitPrefEdits", "NewApi")

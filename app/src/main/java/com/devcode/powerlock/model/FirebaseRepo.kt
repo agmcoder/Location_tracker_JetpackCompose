@@ -23,19 +23,28 @@ private var db = Firebase.firestore
 
 @DelicateCoroutinesApi
 fun checkIfThereIsAnotherEqualAndroidId(context : Context) : Boolean {
-	var boolean = false
-	 GlobalScope.launch(IO) {
-		val job = launch { db.collection("phones").document(FirebaseAuth.getInstance().currentUser?.uid.orEmpty())
-			.get().await()?.let { documentSnapshot ->
-				boolean = documentSnapshot.getString("androidID").equals(getAndroidId(context))
-
-			} ?: run {
-			boolean = false
+	var boolean =false
+	GlobalScope.launch(IO) {
+		val job = launch {
+			db.collection("phones").document(
+				getFirebaseID()
+			)
+				.get().await()?.let { documentSnapshot ->
+					boolean = documentSnapshot.getString("androidID").equals(getAndroidId(context))
+					Logger.d("valor del boolean -> $boolean")
+				} ?: run {
+				//boolean = true
 			}
 		}
-		 job.join()
+		job.join()
 	}
 	return boolean
+}
+
+fun getFirebaseID() : String {
+
+	return FirebaseAuth.getInstance().currentUser?.uid.orEmpty()
+
 }
 
 suspend fun saveLocation(location : LatLng, androidID : String) = runCatching {
@@ -44,7 +53,7 @@ suspend fun saveLocation(location : LatLng, androidID : String) = runCatching {
 		"longitud" to "${location.longitude}"
 	)
 	db.collection("phones")
-		.document(androidID).set(locationList).await()
+		.document(getFirebaseID()).set(locationList, SetOptions.merge()).await()
 
 }.isSuccess
 

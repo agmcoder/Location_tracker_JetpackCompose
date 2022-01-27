@@ -10,7 +10,7 @@ import androidx.navigation.compose.rememberNavController
 import com.devcode.powerlock.view.screens.LoginPage
 import com.devcode.powerlock.view.screens.MapPage
 import com.devcode.powerlock.view.screens.MenuPage
-import com.learnandroid.powerlock.composables.RegisterPage
+import com.devcode.powerlock.view.screens.RegisterPage
 import com.devcode.powerlock.view.screens.RegisterPhonePage
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 

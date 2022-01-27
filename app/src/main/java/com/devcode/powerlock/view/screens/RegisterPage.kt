@@ -1,4 +1,4 @@
-package com.learnandroid.powerlock.composables
+package com.devcode.powerlock.view.screens
 
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
@@ -27,7 +27,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.devcode.powerlock.R
-import com.devcode.powerlock.view.components.OutLinedTextFieldCustomPassword
 import com.devcode.powerlock.model.registerChecker
 import com.devcode.powerlock.theme.primaryColor
 
@@ -110,11 +109,6 @@ fun RegisterPage(navController : NavController) {
 								.focusRequester(focusRequester = focusRequester)
 						)
 
-						//firstPasswordValue
-						OutLinedTextFieldCustomPassword(passwordValue,
-							"prueba",
-							"masprueba",
-							passwordVisibility)
 						OutlinedTextField(
 							value = passwordValue.value,
 							onValueChange = { passwordValue.value = it },

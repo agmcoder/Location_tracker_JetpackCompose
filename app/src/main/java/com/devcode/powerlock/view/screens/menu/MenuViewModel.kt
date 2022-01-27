@@ -1,4 +1,4 @@
-package com.devcode.powerlock.view.screens.viewmodel
+package com.devcode.powerlock.view.screens.menu
 
 import android.content.Context
 import androidx.lifecycle.ViewModel
