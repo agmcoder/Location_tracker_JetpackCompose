@@ -8,12 +8,16 @@ import android.provider.Settings
 import android.util.Log
 import android.widget.Toast
 import androidx.navigation.NavController
+import com.devcode.powerlock.data.network.LoginResult
+import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.ktx.Firebase
 import com.orhanobut.logger.Logger
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
 
 fun emailPasswordRegister(
     context: Context,
@@ -51,30 +55,14 @@ fun emailPasswordRegister(
     ed:SharedPreferences.Editor
 ) {
     val mAuth = FirebaseAuth.getInstance()
-    mAuth
+    val i = mAuth
         .signInWithEmailAndPassword(userMail, userPassword)
         .addOnCompleteListener { task ->
             if (task.isSuccessful) {
-
                 ed.putString("user", userMail)
                 ed.putString("password", userPassword)
                 ed.apply()
-                Logger.d( "signInWithEmail:success")
-
-                    when(checkIfThereIsAnotherEqualAndroidId(context)){
-                        true->{
-                            navController.popBackStack()
-                            navController.navigate("menu_page")
-                        }
-                        false->{
-                            navController.popBackStack()
-                            navController.navigate("map_page")
-                        }
-
-                    }
-
-
-
+                Logger.d("signInWithEmail:success")
 
             } else {
                 Logger.i("else is susccessful")
@@ -85,6 +73,16 @@ fun emailPasswordRegister(
                     "Authentication failed.",
                     Toast.LENGTH_SHORT
                 ).show()
+
             }
         }
+}
+
+suspend fun login(context: Context, userMail: String, userPassword: String, ed:SharedPreferences.Editor) = runCatching {
+    FirebaseAuth.getInstance().signInWithEmailAndPassword(userMail,userPassword).await()
+}.toLoginResult()
+
+private fun Result<AuthResult>.toLoginResult() = when(getOrNull()) {
+    null -> LoginResult.Error
+    else -> LoginResult.Success
 }

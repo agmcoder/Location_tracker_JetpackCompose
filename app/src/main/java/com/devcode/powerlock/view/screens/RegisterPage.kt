@@ -92,7 +92,7 @@ fun RegisterPage(navController : NavController) {
 					horizontalAlignment = Alignment.CenterHorizontally
 				) {
 
-					com.devcode.powerlock.view.components.Spacer()
+					com.devcode.powerlock.view.components.CustomSpacer()
 					Column(horizontalAlignment = Alignment.CenterHorizontally) {
 						//userName
 						OutlinedTextField(
@@ -190,10 +190,10 @@ fun RegisterPage(navController : NavController) {
 								}
 							})
 						)
-						com.devcode.powerlock.view.components.Spacer()
+						com.devcode.powerlock.view.components.CustomSpacer()
 
 					}
-					com.devcode.powerlock.view.components.Spacer()
+					com.devcode.powerlock.view.components.CustomSpacer()
 				}
 
 			}

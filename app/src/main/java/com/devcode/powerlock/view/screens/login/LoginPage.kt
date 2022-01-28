@@ -2,6 +2,7 @@ package com.devcode.powerlock.view.screens
 
 import android.annotation.SuppressLint
 import android.content.SharedPreferences
+import android.widget.Toast
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -34,11 +35,13 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.devcode.powerlock.R
-import com.devcode.powerlock.view.components.Spacer
+import com.devcode.powerlock.data.network.LoginDeviceState
+import com.devcode.powerlock.view.components.CustomSpacer
 import com.devcode.powerlock.model.loginChecker
 import com.devcode.powerlock.theme.primaryColor
 import com.devcode.powerlock.view.screens.login.LoginPageViewModel
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 @SuppressLint("CommitPrefEdits", "NewApi")
@@ -224,9 +227,14 @@ fun LoginPage(navController : NavController, sharedPreferences : SharedPreferenc
 					Spacer(modifier = Modifier.padding(10.dp))
 					Button(
 						onClick = {
-
 							coroutineScope.launch {
-								loginChecker(emailValue, passwordValue, context, navController, ed)
+								loginChecker(emailValue, passwordValue, context, navController, ed).collect {
+									when(it) {
+										LoginDeviceState.OBSERVER -> navController.navigate("map_page")
+										LoginDeviceState.EMITTER -> navController.navigate("menu_page")
+										LoginDeviceState.ERROR ->  Toast.makeText(context, "Authentication failed.", Toast.LENGTH_SHORT).show()
+									}
+								}
 
 							}
 
@@ -239,7 +247,7 @@ fun LoginPage(navController : NavController, sharedPreferences : SharedPreferenc
 					}
 
 
-					Spacer()
+					CustomSpacer()
 					Row(
 						modifier = Modifier.fillMaxWidth(),
 						horizontalArrangement = Arrangement.Center
@@ -263,7 +271,7 @@ fun LoginPage(navController : NavController, sharedPreferences : SharedPreferenc
 						)
 
 					}
-					Spacer()
+					CustomSpacer()
 					Text(
 						text = "Create An Account",
 						modifier = Modifier.clickable(onClick = {
@@ -275,7 +283,7 @@ fun LoginPage(navController : NavController, sharedPreferences : SharedPreferenc
 					)
 
 
-					Spacer()
+					CustomSpacer()
 
 				}
 			}

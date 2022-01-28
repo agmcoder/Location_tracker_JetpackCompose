@@ -3,7 +3,6 @@ package com.devcode.powerlock.model
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.SharedPreferences
-import android.os.Build
 import com.google.android.libraries.maps.model.LatLng
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
@@ -12,34 +11,26 @@ import com.google.firebase.firestore.SetOptions
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.orhanobut.logger.Logger
-import kotlinx.coroutines.DelicateCoroutinesApi
-import kotlinx.coroutines.Dispatchers.IO
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.tasks.await
 
 @SuppressLint("StaticFieldLeak")
-private var db = Firebase.firestore
+private var db = getDb()
 
-@DelicateCoroutinesApi
-fun checkIfThereIsAnotherEqualAndroidId(context : Context) : Boolean {
-	var boolean =false
-	GlobalScope.launch(IO) {
-		val job = launch {
-			db.collection("phones").document(
-				getFirebaseID()
-			)
-				.get().await()?.let { documentSnapshot ->
-					boolean = documentSnapshot.getString("androidID").equals(getAndroidId(context))
-					Logger.d("valor del boolean -> $boolean")
-				} ?: run {
-				//boolean = true
-			}
-		}
-		job.join()
+suspend fun latLngSnapshotObserver(isObserving:Boolean) = flow{
+	while (isObserving){
+		val document=db.collection("phones").document(getFirebaseID()).get().await()
+		val latitude=document.getString("latitud")?:"0.0"
+		val longitude=document.getString("longitud")?:"0.0"
+		emit(LatLng(latitude.toDouble(),longitude.toDouble()))
+		delay(5000)
 	}
-	return boolean
+
+
 }
+
+
 
 fun getFirebaseID() : String {
 
@@ -82,9 +73,7 @@ fun getGPSLocationStateToSharedPreferences(
 					state = document.getBoolean("GPSLocationState")
 					Logger.d("document exist getGPSLocationState value --> $state")
 					ed.putBoolean("GPS", state!!)
-					if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD) {
-						ed.apply()
-					}
+					ed.apply()
 
 				} else {
 					Logger.e("document does not exists")
@@ -99,6 +88,8 @@ fun getGPSLocationStateToSharedPreferences(
 	}
 
 }
+
+
 
 fun getLocationByAndroidID(context : Context, myCallback : MyCallback) {
 	Logger.d("we entry into getLocationByandroidid")
@@ -124,6 +115,8 @@ fun getLocationByAndroidID(context : Context, myCallback : MyCallback) {
 	}
 }
 
+
+
 fun getCurrentUserName(context : Context) : String? {
 	val user = Firebase.auth.currentUser
 	user?.let {
@@ -146,6 +139,8 @@ fun getCurrentUserName(context : Context) : String? {
 	}
 	return null
 }
+
+
 
 //we will get all phones that the current user has associated
 fun getPhonesByUser(context : Context) : MutableList<Phone> {
@@ -186,10 +181,13 @@ fun getPhonesByUser(context : Context) : MutableList<Phone> {
 
 }
 
+
+
 fun getDb() : FirebaseFirestore {
 	return Firebase.firestore
 
 }
+
 
 interface MyCallback {
 	fun onCallback(value : LatLng)

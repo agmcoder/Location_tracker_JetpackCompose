@@ -4,52 +4,52 @@ import android.os.Bundle
 import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.viewinterop.AndroidView
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.LifecycleObserver
+import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
 import com.devcode.powerlock.view.MapToolBar
 import com.devcode.powerlock.model.*
+import com.devcode.powerlock.view.screens.map.MapPageViewModel
 import com.google.android.libraries.maps.CameraUpdateFactory
 import com.google.android.libraries.maps.GoogleMap
 import com.google.android.libraries.maps.MapView
 import com.google.android.libraries.maps.model.LatLng
 import com.google.android.libraries.maps.model.MarkerOptions
 import com.orhanobut.logger.Logger
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 
 @Composable
-fun MapPage(navController : NavController) {
+fun MapPage(navController : NavController,viewModel : MapPageViewModel = hiltViewModel()) {
 
 	Scaffold(
 		topBar = { MapToolBar() },
-		content = { MapContent() },
+		content = { MapContent(viewModel = viewModel) },
 
 		)
 }
 
-@Preview(name = "map content")
 @Composable
-fun MapContent() {
+fun MapContent(viewModel : MapPageViewModel) {
 	val context = LocalContext.current
 	//GoogleMaps()
 
-	MyMap {}
+	MyMap(viewModel = viewModel)
 }
 
 //-------------------------------------------------------------------------------------------
 @Composable
-fun MyMap(onReady : (GoogleMap) -> Unit) {
+fun MyMap(viewModel : MapPageViewModel) {
 	val context = LocalContext.current
-	/*getLocationByAndroidID(context, object : MyCallback {
-		override fun onCallback(value : LatLng) {
-            Logger.d("$value onCallbackvalue")
-		}
-	})*/
-    val position=LatLng(23.34,34.23)
+	val coroutineScope= rememberCoroutineScope()
 
 	Logger.d("we are in mymap")
 
@@ -62,15 +62,22 @@ fun MyMap(onReady : (GoogleMap) -> Unit) {
 				mapView.getMapAsync { googleMap ->
 					val zoomLevel = 3f
 					//inicio de coordenadas
-					googleMap
-						.moveCamera(CameraUpdateFactory.newLatLngZoom(position, zoomLevel))
-					googleMap.addMarker(position.let { it1 ->
-						MarkerOptions().position(it1)
-							.title(getAndroidId(context).toString())
-							.snippet(position.toString())
+					coroutineScope.launch {
+						viewModel.location.collect {latLng->
+							googleMap
+								.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoomLevel))
+							googleMap.addMarker(latLng.let { it1 ->
+								MarkerOptions().position(it1)
+									.title(getAndroidId(context).toString())
+									.snippet(latLng.toString())
+								//.icon(Icons.Default.Phone)
+							})
+						}
 					}
-						//.icon(Icons.Default.Phone)
-					)
+
+
+
+
 				}
 			}
 		}
