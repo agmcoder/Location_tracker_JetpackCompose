@@ -1,8 +1,11 @@
 package com.devcode.powerlock.view.screens.map
 
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.devcode.powerlock.data.network.LocationServices
+
 import com.devcode.powerlock.model.latLngSnapshotObserver
 import com.google.android.libraries.maps.model.LatLng
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -21,6 +24,9 @@ class MapPageViewModel @Inject constructor() : ViewModel() {
 	private var __location= MutableStateFlow(LatLng(0.0,0.0))
 	val location=__location.asStateFlow()
 
+
+
+
 	private var __diffLocations=LatLng(0.0,0.0)
 
 	private var _ejemplo = MutableStateFlow(false)
@@ -31,6 +37,7 @@ class MapPageViewModel @Inject constructor() : ViewModel() {
 		getPhoneLocation()
 
 	}
+
 
 	private fun getPhoneLocation() {
 		viewModelScope.launch(IO) {

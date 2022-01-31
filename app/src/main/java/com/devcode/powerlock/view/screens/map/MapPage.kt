@@ -1,27 +1,23 @@
-package com.devcode.powerlock.view.screens
+package com.devcode.powerlock.view.screens.map
 
 import android.os.Bundle
 import androidx.compose.material.Scaffold
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Phone
+import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.LifecycleObserver
-import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
 import com.devcode.powerlock.view.MapToolBar
 import com.devcode.powerlock.model.*
-import com.devcode.powerlock.view.screens.map.MapPageViewModel
 import com.google.android.libraries.maps.CameraUpdateFactory
-import com.google.android.libraries.maps.GoogleMap
 import com.google.android.libraries.maps.MapView
-import com.google.android.libraries.maps.model.LatLng
 import com.google.android.libraries.maps.model.MarkerOptions
 import com.orhanobut.logger.Logger
 import kotlinx.coroutines.flow.collect
@@ -50,7 +46,6 @@ fun MapContent(viewModel : MapPageViewModel) {
 fun MyMap(viewModel : MapPageViewModel) {
 	val context = LocalContext.current
 	val coroutineScope= rememberCoroutineScope()
-
 	Logger.d("we are in mymap")
 
 	val mapView = remember { MapView(context) }
@@ -60,18 +55,20 @@ fun MyMap(viewModel : MapPageViewModel) {
 		factory = {
 			mapView.apply {
 				mapView.getMapAsync { googleMap ->
-					val zoomLevel = 3f
+					val zoomLevel = 3f//rememberSaveable{ mutableStateOf(googleMap.cameraPosition.zoom)}
 					//inicio de coordenadas
 					coroutineScope.launch {
 						viewModel.location.collect {latLng->
+							googleMap.clear()
 							googleMap
 								.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoomLevel))
 							googleMap.addMarker(latLng.let { it1 ->
 								MarkerOptions().position(it1)
 									.title(getAndroidId(context).toString())
 									.snippet(latLng.toString())
-								//.icon(Icons.Default.Phone)
+									//.icon(Icons.Default.Phone)
 							})
+
 						}
 					}
 

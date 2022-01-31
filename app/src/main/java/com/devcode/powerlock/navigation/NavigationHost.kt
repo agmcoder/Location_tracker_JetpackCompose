@@ -8,7 +8,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.devcode.powerlock.view.screens.LoginPage
-import com.devcode.powerlock.view.screens.MapPage
+import com.devcode.powerlock.view.screens.map.MapPage
 import com.devcode.powerlock.view.screens.MenuPage
 import com.devcode.powerlock.view.screens.RegisterPage
 import com.devcode.powerlock.view.screens.RegisterPhonePage
