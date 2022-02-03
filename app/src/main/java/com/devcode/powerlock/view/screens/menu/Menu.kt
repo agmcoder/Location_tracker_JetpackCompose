@@ -3,10 +3,12 @@ package com.devcode.powerlock.view.screens
 import android.content.Context
 import android.content.SharedPreferences
 import android.os.Build
+import android.widget.ToggleButton
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material.IconToggleButton
 import androidx.compose.material.Switch
 import androidx.compose.material.SwitchDefaults
 import androidx.compose.material.Text
@@ -35,7 +37,6 @@ import com.orhanobut.logger.Logger
 @Composable
 fun Menu(navController : NavController, sharedPreferences : SharedPreferences, menuViewModel : MenuViewModel= hiltViewModel()) {
 	val context : Context = LocalContext.current
-	var fusedLocationProviderClient : FusedLocationProviderClient
 	val androidID : String? = getAndroidId(context)
 	val ed : SharedPreferences.Editor = sharedPreferences.edit()
 	//val context = LocalContext.current
@@ -106,47 +107,7 @@ fun Menu(navController : NavController, sharedPreferences : SharedPreferences, m
 				}
 
 			}
-			item {
-				Row {
-					Box(
-						modifier =
-						Modifier.fillMaxWidth(0.8f)
-					)
-					{
-						Text(
-							color = Color.Black,
-							text = stringResource(R.string.block_power_menu),
-							fontSize = 30.sp,
-							modifier = Modifier.padding(20.dp)
-						)
 
-					}
-					Box(
-						modifier =
-						Modifier.fillMaxSize(),
-						contentAlignment = Alignment.CenterEnd
-					) {
-						Switch(
-							checked = checkedStatePowerMenu.value,
-							onCheckedChange = {
-								checkedStatePowerMenu.value = it
-								ed.putBoolean("power", checkedStatePowerMenu.value)
-								ed.apply()
-							},
-							modifier = Modifier
-								.padding(20.dp),
-							colors = SwitchDefaults.colors(
-								//color of switches
-								checkedThumbColor = Color(0xFF00CC99),
-								checkedTrackColor = Color(0xFF7BB661),
-								uncheckedThumbColor = Color(0xFF83010B),
-								uncheckedTrackColor = Color(0xFFBB4C4C)
-							)
-
-						)
-					}
-				}
-			}
 		}
 	}
 }
