@@ -24,7 +24,7 @@ suspend fun latLngSnapshotObserver(isObserving:Boolean) = flow{
 		val latitude=document.getString("latitud")?:"0.0"
 		val longitude=document.getString("longitud")?:"0.0"
 		emit(LatLng(latitude.toDouble(),longitude.toDouble()))
-		delay(5000)
+		delay(1000)
 	}
 
 
@@ -43,6 +43,7 @@ suspend fun saveLocation(location : LatLng, androidID : String) = runCatching {
 		"latitud" to "${location.latitude}",
 		"longitud" to "${location.longitude}"
 	)
+	Logger.d("${location.latitude} ,  ${location.longitude}")
 	db.collection("phones")
 		.document(getFirebaseID()).set(locationList, SetOptions.merge()).await()
 

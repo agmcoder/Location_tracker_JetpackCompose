@@ -63,7 +63,7 @@ class LocationServices @Inject constructor(@ApplicationContext private val conte
 
 		while (boolean) {
 			emit(userLocation)
-			delay(1000)
+			delay(5000)
 		}
 
 

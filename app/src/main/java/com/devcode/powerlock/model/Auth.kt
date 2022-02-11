@@ -36,7 +36,7 @@ fun emailPasswordRegister(
 
 
         } else {
-            Logger.d("error al autenticar")
+            Logger.d("error al REGISTRAR")
             // If sign in fails, display a message to the user.
             Toast.makeText(
                 context, "Authentication failed.",

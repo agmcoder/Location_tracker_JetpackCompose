@@ -9,6 +9,8 @@ import com.devcode.powerlock.model.saveLocation
 import com.google.android.libraries.maps.model.LatLng
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -20,6 +22,16 @@ class MenuViewModel @Inject constructor(private val locationServices : LocationS
 	//val userLocation:LiveData<LatLng>
 	//	get() = _userLocation
 	//private lateinit var location:LatLng
+	private var __GPSPowerState = MutableStateFlow(false)
+	val GPSPowerState=__GPSPowerState.asStateFlow()
+
+	suspend fun getGPSPowerState()
+	{
+		viewModelScope.launch(IO){
+
+		}
+	}
+
 	fun startLocationUpdates(context:Context){
 		viewModelScope.launch(IO) {
 			val result = locationServices.startLocationUpdates()

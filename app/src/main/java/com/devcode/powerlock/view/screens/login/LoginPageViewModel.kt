@@ -12,9 +12,7 @@ import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class LoginPageViewModel @Inject constructor():ViewModel() {
-
 	private var __isThereAnotherEqualAndroidID= MutableLiveData<Boolean>()
 	val isThereAnotherEqualAndroidID:LiveData<Boolean>
 		get() = __isThereAnotherEqualAndroidID
-
 }
