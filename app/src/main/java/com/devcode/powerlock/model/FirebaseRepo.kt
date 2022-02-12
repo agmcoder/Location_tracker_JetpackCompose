@@ -49,12 +49,17 @@ suspend fun saveLocation(location : LatLng, androidID : String) = runCatching {
 
 }.isSuccess
 
-fun setGPSLocationState(state : Boolean, androidID : String) {
+fun setGPSStateFirebase(state : Boolean) {
 	val estado = hashMapOf(
-		"GPSLocationState" to state
+		"GPSState" to state
 	)
-	db.collection("phones").document(androidID).set(estado, SetOptions.merge())
+	db.collection("phones").document(getFirebaseID()).set(estado, SetOptions.merge())
 
+}
+suspend fun getGPSStateFirebase()= flow {
+	val document=db.collection("phones").document(getFirebaseID()).get().await()
+	val state=document.getBoolean("GPSState")?:false
+	emit(state)
 }
 
 fun getGPSLocationStateToSharedPreferences(
