@@ -14,7 +14,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
@@ -37,7 +36,6 @@ fun Menu(sharedPreferences : SharedPreferences, menuViewModel : MenuViewModel = 
 	//val context = LocalContext.current
 	val initialValueGpsState = sharedPreferences.getBoolean("GPS", false)
 	val checkedStateGps = rememberSaveable { mutableStateOf(initialValueGpsState) }
-	Logger.d("initial value gpsState Menu.kt -> $initialValueGpsState")
 
 	Box(
 		modifier = Modifier

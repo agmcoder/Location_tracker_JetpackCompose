@@ -37,6 +37,7 @@ class MainActivity : ComponentActivity() {
 		//not implemented yet. fusedLocation
 		//fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
 
+
 		setContent {
 			SecurePhoneAppTheme {
 

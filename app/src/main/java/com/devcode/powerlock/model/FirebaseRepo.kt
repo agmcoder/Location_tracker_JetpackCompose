@@ -18,19 +18,16 @@ import kotlinx.coroutines.tasks.await
 @SuppressLint("StaticFieldLeak")
 private var db = getDb()
 
-suspend fun latLngSnapshotObserver(isObserving:Boolean) = flow{
-	while (isObserving){
-		val document=db.collection("phones").document(getFirebaseID()).get().await()
-		val latitude=document.getString("latitud")?:"0.0"
-		val longitude=document.getString("longitud")?:"0.0"
-		emit(LatLng(latitude.toDouble(),longitude.toDouble()))
+suspend fun latLngSnapshotObserver(isObserving : Boolean) = flow {
+	while (isObserving) {
+		val document = db.collection("phones").document(getFirebaseID()).get().await()
+		val latitude = document.getString("latitud") ?: "0.0"
+		val longitude = document.getString("longitud") ?: "0.0"
+		emit(LatLng(latitude.toDouble(), longitude.toDouble()))
 		delay(1000)
 	}
 
-
 }
-
-
 
 fun getFirebaseID() : String {
 
@@ -50,16 +47,24 @@ suspend fun saveLocation(location : LatLng, androidID : String) = runCatching {
 }.isSuccess
 
 fun setGPSStateFirebase(state : Boolean) {
+	Logger.d("setGPSStateFirebase $state")
 	val estado = hashMapOf(
 		"GPSState" to state
 	)
 	db.collection("phones").document(getFirebaseID()).set(estado, SetOptions.merge())
 
 }
-suspend fun getGPSStateFirebase()= flow {
-	val document=db.collection("phones").document(getFirebaseID()).get().await()
-	val state=document.getBoolean("GPSState")?:false
-	emit(state)
+
+suspend fun getGPSStateFirebase() = flow {
+	var finish = 0
+	while (finish < 1) {
+
+		val document = db.collection("phones")
+			.document(getFirebaseID()).get().await()
+		val state = document.getBoolean("GPSState") ?: false
+		emit(state)
+		finish++
+	}
 }
 
 fun getGPSLocationStateToSharedPreferences(
@@ -95,8 +100,6 @@ fun getGPSLocationStateToSharedPreferences(
 
 }
 
-
-
 fun getLocationByAndroidID(context : Context, myCallback : MyCallback) {
 	Logger.d("we entry into getLocationByandroidid")
 	val androidID = getAndroidId(context = context)
@@ -121,8 +124,6 @@ fun getLocationByAndroidID(context : Context, myCallback : MyCallback) {
 	}
 }
 
-
-
 fun getCurrentUserName(context : Context) : String? {
 	val user = Firebase.auth.currentUser
 	user?.let {
@@ -145,8 +146,6 @@ fun getCurrentUserName(context : Context) : String? {
 	}
 	return null
 }
-
-
 
 //we will get all phones that the current user has associated
 fun getPhonesByUser(context : Context) : MutableList<Phone> {
@@ -187,13 +186,10 @@ fun getPhonesByUser(context : Context) : MutableList<Phone> {
 
 }
 
-
-
 fun getDb() : FirebaseFirestore {
 	return Firebase.firestore
 
 }
-
 
 interface MyCallback {
 	fun onCallback(value : LatLng)
