@@ -3,6 +3,7 @@ package com.devcode.powerlock.model
 import android.content.Context
 import android.content.SharedPreferences
 import android.widget.Toast
+import androidx.activity.ComponentActivity
 import androidx.compose.runtime.MutableState
 import androidx.navigation.NavController
 import com.devcode.powerlock.data.network.LoginDeviceState
@@ -35,8 +36,14 @@ suspend fun loginChecker(
 				FirebaseFirestore.getInstance().collection("phones").document(
 					getFirebaseID()
 				)
-					.get().await()?.let { documentSnapshot ->
-						if (documentSnapshot.getString("androidID").equals(getAndroidId(context))) emit(LoginDeviceState.EMITTER) else emit(LoginDeviceState.OBSERVER)
+					.get().await()?.let { documentSnapShot ->
+						documentSnapShot.getBoolean("GPSState")?.let {
+							ed.putBoolean("GPSState", it)
+							ed.apply()
+
+						}
+
+						if (documentSnapShot.getString("androidID").equals(getAndroidId(context))) emit(LoginDeviceState.EMITTER) else emit(LoginDeviceState.OBSERVER)
 
 
 					}

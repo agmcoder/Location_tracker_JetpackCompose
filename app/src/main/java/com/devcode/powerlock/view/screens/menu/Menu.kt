@@ -53,7 +53,7 @@ fun Menu(sharedPreferences : SharedPreferences, menuViewModel : MenuViewModel = 
 				Box(
 					modifier =Modifier.size(100.dp)
 				){
-					GPSPowerButton()
+					GPSPowerButton(sharedPreferences)
 				}
 		}
 
@@ -64,7 +64,7 @@ fun Menu(sharedPreferences : SharedPreferences, menuViewModel : MenuViewModel = 
 		{ state ->
 
 			checkedStateGps.value = state
-			if (state) menuViewModel.startLocationUpdates(context) else menuViewModel.stopLocationUpdates()
+
 
 		},
 		modifier = Modifier

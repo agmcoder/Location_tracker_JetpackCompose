@@ -11,7 +11,7 @@ import com.google.firebase.firestore.SetOptions
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.orhanobut.logger.Logger
-import kotlinx.coroutines.delay
+import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.tasks.await
 
@@ -55,17 +55,13 @@ fun setGPSStateFirebase(state : Boolean) {
 
 }
 
-suspend fun getGPSStateFirebase() = flow {
-	var finish = 0
-	while (finish < 1) {
+@OptIn(DelicateCoroutinesApi::class)
+suspend fun getGPSStateFirebase() = GlobalScope.async {
 
 		val document = db.collection("phones")
 			.document(getFirebaseID()).get().await()
-		val state = document.getBoolean("GPSState") ?: false
-		emit(state)
-		finish++
-	}
-}
+		document.getBoolean("GPSState")?:false
+}.await()
 
 fun getGPSLocationStateToSharedPreferences(
 	androidID : String?,

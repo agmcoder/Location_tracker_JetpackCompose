@@ -1,6 +1,7 @@
 package com.devcode.powerlock.view.components
 
 import android.annotation.SuppressLint
+import android.content.SharedPreferences
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
@@ -10,24 +11,28 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.LocationOn
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.devcode.powerlock.view.screens.menu.MenuViewModel
 import com.orhanobut.logger.Logger
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.launch
 
 @SuppressLint("CoroutineCreationDuringComposition")
 @Composable
-fun GPSPowerButton(menuViewModel : MenuViewModel = hiltViewModel()) {
+fun GPSPowerButton(
+	sharedPreferences : SharedPreferences,
+	menuViewModel : MenuViewModel = hiltViewModel()
+) {
 	val onColor = Color.Green
 	val offColor = Color.Red
-	val initialStateButton = getStateButton()
+	val context = LocalContext.current
+
+	val initialStateButton = sharedPreferences.getBoolean("GPSState", false)
 	val buttonState = rememberSaveable { mutableStateOf(initialStateButton) }
+
 	Logger.d("initial state button ${initialStateButton}")
 	fun getColor() : Color {
 		return if (buttonState.value)
@@ -47,8 +52,16 @@ fun GPSPowerButton(menuViewModel : MenuViewModel = hiltViewModel()) {
 		onClick = {
 
 			when (buttonState.value) {
-				true -> buttonState.value = false
-				false -> buttonState.value = true
+				true -> {
+					buttonState.value = false
+					menuViewModel.stopLocationUpdates()
+				}
+
+				false -> {
+					buttonState.value = true
+					menuViewModel.startLocationUpdates(context)
+
+				}
 			}
 			menuViewModel.setGPSSTATEviewModel(buttonState.value)
 
@@ -65,18 +78,7 @@ fun GPSPowerButton(menuViewModel : MenuViewModel = hiltViewModel()) {
 
 }
 
-@SuppressLint("CoroutineCreationDuringComposition")
-@Composable
-fun getStateButton(menuViewModel : MenuViewModel = hiltViewModel()) : Boolean {
-	var state = true
-	val coroutineScope = rememberCoroutineScope()
-	coroutineScope.launch {
-		menuViewModel.GPSPowerState.collect {
-			state = it
-		}
-	}
-	Logger.i("getStateButton method is $state")
-	return state
-}
+
+
 
 

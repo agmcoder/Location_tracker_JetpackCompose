@@ -20,6 +20,8 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import java.util.prefs.Preferences
 import javax.inject.Inject
+import javax.inject.Singleton
+
 
 @HiltViewModel
 class MenuViewModel @Inject constructor(private val locationServices : LocationServices) :
@@ -39,10 +41,7 @@ init {
 // ------------------------------GPSSTATE ------------------------------
 private fun getGPSStateViewModel() {
 		viewModelScope.launch(IO) {
-			getGPSStateFirebase().collect { state ->
-				checkIfGPSStateIsTheSame(state)
-
-			}
+				checkIfGPSStateIsTheSame(getGPSStateFirebase())
 
 		}
 	}
