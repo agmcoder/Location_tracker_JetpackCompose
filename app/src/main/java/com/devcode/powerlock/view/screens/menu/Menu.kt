@@ -6,14 +6,18 @@ import android.content.SharedPreferences
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.unit.dp
+import androidx.compose.ui.res.colorResource
 import com.devcode.powerlock.model.getAndroidId
-import com.devcode.powerlock.theme.whiteBackground
+import com.devcode.powerlock.theme.SecurePhoneAppTheme
 import com.devcode.powerlock.view.components.GPSPowerButton
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 
@@ -23,13 +27,18 @@ import com.google.accompanist.permissions.ExperimentalPermissionsApi
 @Composable
 fun Menu(sharedPreferences : SharedPreferences) {
 	val context : Context = LocalContext.current
+	val temaInicial = isSystemInDarkTheme()
+	val isDark = rememberSaveable { mutableStateOf(temaInicial) }
+	SecurePhoneAppTheme(isDark.value) {
+		
+	}
 	getAndroidId(context)
 	//val context = LocalContext.current
 
 	Box(
 		modifier = Modifier
 			.fillMaxSize()
-			.background(whiteBackground),
+			.background(MaterialTheme.colors.background),
 		contentAlignment = Alignment.Center,
 
 		)
@@ -40,7 +49,10 @@ fun Menu(sharedPreferences : SharedPreferences) {
 			horizontalAlignment = Alignment.CenterHorizontally
 		) {
 			Box(
-				modifier = Modifier.size(100.dp)
+				modifier = Modifier
+					.fillMaxSize()
+					.align(Alignment.CenterHorizontally),
+				contentAlignment = Alignment.Center
 			) {
 				GPSPowerButton(sharedPreferences)
 			}

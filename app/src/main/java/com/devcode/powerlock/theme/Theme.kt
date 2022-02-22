@@ -43,6 +43,7 @@ fun SecurePhoneAppTheme(
         DarkColorPalette
     } else {
         LightColorPalette
+
     }
 
     MaterialTheme(

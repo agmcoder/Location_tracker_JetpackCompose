@@ -1,5 +1,6 @@
 package com.devcode.powerlock.view
 
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.TopAppBar
 import androidx.compose.runtime.Composable
@@ -11,7 +12,7 @@ import com.devcode.powerlock.R
 fun MenuToolbar(title : String) {
 	TopAppBar(
 		title = { Text(text = title) },
-		backgroundColor = colorResource(id = R.color.purple_200)
+		backgroundColor = MaterialTheme.colors.background
 	)
 }
 
