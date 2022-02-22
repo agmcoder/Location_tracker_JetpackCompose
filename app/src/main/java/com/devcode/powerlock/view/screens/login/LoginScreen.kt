@@ -9,24 +9,23 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.focus.focusOrder
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
@@ -50,42 +49,26 @@ fun LoginPage(
 	navController : NavController,
 	sharedPreferences : SharedPreferences
 ) {
-	val ed = sharedPreferences.edit()
+
 	val coroutineScope = rememberCoroutineScope()
-	val rememberUser = sharedPreferences.getString("user", "")
-	val rememberPassword = sharedPreferences.getString("password", "")
-	val initialCheckBoxState = sharedPreferences.getBoolean("rememberUser", false)
-	val checkBoxState = rememberSaveable { mutableStateOf(initialCheckBoxState) }
+	val ed = sharedPreferences.edit()
+	val checkBoxState = rememberSaveable { mutableStateOf(false) }
 	val (emailRequest, passwordRequest) = FocusRequester.createRefs()
 	//val image = imageResource(id= R.drawable.logo)
 	val context = LocalContext.current
 	val image = painterResource(R.drawable.logo2)
-	val emailValue : MutableState<String>
-	val passwordValue : MutableState<String>
+	val emailValue = rememberSaveable { mutableStateOf("") }
+	val passwordValue = rememberSaveable { mutableStateOf("") }
 	val passwordVisibility = remember { mutableStateOf(false) }
 	val scrollState = rememberScrollState()
 	val focusManager = LocalFocusManager.current
-
-
-
-	emailValue = if (rememberUser != null && checkBoxState.value) {
-		rememberSaveable { mutableStateOf(rememberUser) }
-
-	} else
-		rememberSaveable { mutableStateOf("") }
-
-
-	passwordValue = if (rememberPassword != null && checkBoxState.value) {
-		rememberSaveable { mutableStateOf(rememberPassword) }
-
-	} else
-		rememberSaveable { mutableStateOf("") }
 
 	//we start to implement login screen UI-->
 
 	Column(
 		modifier = Modifier
 			.fillMaxSize()
+			.background(MaterialTheme.colors.background)
 			.clickable { focusManager.clearFocus() },
 		horizontalAlignment = Alignment.CenterHorizontally
 	) {
@@ -93,8 +76,8 @@ fun LoginPage(
 		Box(//this is the logo box
 			modifier = Modifier
 				.fillMaxHeight(0.3f)
-				.background(Color.White), contentAlignment =
-			Alignment.Center
+				.background(MaterialTheme.colors.background),
+			contentAlignment = Alignment.Center
 
 		) {
 
@@ -111,19 +94,16 @@ fun LoginPage(
 			Modifier
 				.fillMaxSize()
 				.clip(RoundedCornerShape(topEnd = 30.dp, topStart = 30.dp))
-				.background(Color.Gray)
+				.background(MaterialTheme.colors.surface)
 
 		) {
 
 			Text(
 				modifier = Modifier.padding(5.dp),
-				text = "Sign In",
-				style = TextStyle(
-					fontWeight = FontWeight.Bold,
-					letterSpacing = 2.sp
-				),
+				text = stringResource(id = R.string.signIn),
+				style = MaterialTheme.typography.h2,
+				color = MaterialTheme.colors.onPrimary
 
-				fontSize = 30.sp
 			)
 
 			Column(
@@ -143,83 +123,88 @@ fun LoginPage(
 
 				Column(horizontalAlignment = Alignment.CenterHorizontally)
 				{
-					OutlinedTextField(//USER
+					OutlinedTextField(
 
-						keyboardOptions = KeyboardOptions(
-							keyboardType = KeyboardType.Email,
-							imeAction = ImeAction.Next
-						),
-						keyboardActions = KeyboardActions(onNext = {
-							focusManager.moveFocus(
-								FocusDirection.Next
-							)
-						}),
 						value = emailValue.value,
-						onValueChange = {
-							emailValue.value = it
-						},
+						keyboardOptions = KeyboardOptions(
+							keyboardType = KeyboardType.Password
+						),
+						keyboardActions = KeyboardActions(),
+						onValueChange = { emailValue.value = it },
+
 						label = {
 							Text(
-								text = "Email Address",
-								color = Color.Black
+								text = "user email",
+								color = MaterialTheme.colors.onPrimary
 							)
 						},
-						placeholder = { Text(text = "Email Address", color = Color.Black) },
+						placeholder = {
+							Text(
+								text = "user email",
+								color = MaterialTheme.colors.secondaryVariant
+							)
+						},
 						singleLine = true,
 						modifier = Modifier
 							.fillMaxWidth(0.8f)
-							.focusable()
-							.focusOrder(emailRequest) { next = passwordRequest }
+							.focusable(),
+						textStyle = TextStyle(color = MaterialTheme.colors.onPrimary)
 
 					)
+					OutlinedTextField(
+
+						value = passwordValue.value,
+						keyboardOptions = KeyboardOptions(
+							keyboardType = KeyboardType.Password
+						),
+						keyboardActions = KeyboardActions(),
+						onValueChange = { passwordValue.value = it },
+						trailingIcon = {
+							IconButton(onClick = {
+								passwordVisibility.value = !passwordVisibility.value
+							}) {
+
+								Icon(
+									imageVector = ImageVector.vectorResource(
+										id = R.drawable.password_eye
+									),
+									contentDescription = "",
+									tint = if (passwordVisibility.value)
+										primaryColor else MaterialTheme.colors.onPrimary
+
+								)
+
+							}
+						},
+						label = {
+							Text(
+								text = "Password",
+								color = MaterialTheme.colors.onPrimary
+							)
+						},
+						placeholder = {
+							Text(
+								text = "Password",
+								color = MaterialTheme.colors.secondaryVariant
+							)
+						},
+						singleLine = true,
+						visualTransformation = if (passwordVisibility.value) VisualTransformation.None
+						else PasswordVisualTransformation(),
+						modifier = Modifier
+							.fillMaxWidth(0.8f)
+							.focusable(),
+						textStyle = TextStyle(color = MaterialTheme.colors.onPrimary)
+
+					)
+
 				}
 
 
 
-				OutlinedTextField(
-
-					value = passwordValue.value,
-					keyboardOptions = KeyboardOptions(
-						keyboardType = KeyboardType.Password
-					),
-					keyboardActions = KeyboardActions(),
-					onValueChange = { passwordValue.value = it },
-					trailingIcon = {
-						IconButton(onClick = {
-							passwordVisibility.value = !passwordVisibility.value
-						}) {
-
-							Icon(
-								imageVector = ImageVector.vectorResource(
-									id = R.drawable.password_eye
-								),
-								contentDescription = "",
-								tint = if (passwordVisibility.value)
-									primaryColor else Color.Black
-
-							)
-
-						}
-					},
-					label = { Text(text = "Password", color = Color.Black) },
-					placeholder = { Text(text = "Password", color = Color.Black) },
-					singleLine = true,
-					visualTransformation = if (passwordVisibility.value) VisualTransformation.None
-					else PasswordVisualTransformation(),
-					modifier = Modifier
-						.fillMaxWidth(0.8f)
-						.focusable()
-
-					//onImeActionPerformed = { _, controller ->
-					//controller?.hideSoftwareKeyboard()
-					//}
-
-				)
-
-
-
-				Spacer(modifier = Modifier.padding(10.dp))
+				CustomSpacer()
 				Button(
+
 					onClick = {
 						coroutineScope.launch {
 							loginChecker(
@@ -245,6 +230,12 @@ fun LoginPage(
 					modifier = Modifier
 						.fillMaxWidth(0.8f)
 						.height(50.dp)
+						.clip(MaterialTheme.shapes.medium)
+						,
+					colors = ButtonDefaults.buttonColors(
+						contentColor = MaterialTheme.colors.primaryVariant
+					)
+
 				) {
 					Text(text = "Sign In", fontSize = 20.sp)
 				}
@@ -256,19 +247,17 @@ fun LoginPage(
 					horizontalArrangement = Arrangement.Center
 				) {
 					Text(
-						text = "remember user and password?"
+						text = "remember user and password?",
+						color = MaterialTheme.colors.onPrimary
 					)
 					Checkbox(checked = checkBoxState.value,
+						modifier = Modifier.border(
+							width = 1.dp,
+							color = MaterialTheme.colors.onPrimary
+						),
 						onCheckedChange =
 						{
 							checkBoxState.value = it
-							if (!checkBoxState.value) {
-								ed.putString("user", "")
-								ed.putString("password", "")
-								ed.apply()
-							}
-							ed.putBoolean("rememberUser", checkBoxState.value)
-							ed.apply()
 
 						}
 					)
@@ -282,10 +271,11 @@ fun LoginPage(
 							//popUpTo = navController.graph.startDestination
 							//launchSingleTop = true
 						}
-					})
+					}
+					),
+					color = MaterialTheme.colors.onPrimary
+
 				)
-
-
 				CustomSpacer()
 
 			}

@@ -17,9 +17,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
@@ -70,19 +70,17 @@ fun RegisterPage(navController : NavController) {
 				modifier = Modifier
 					.fillMaxSize()
 					.clip(RoundedCornerShape(topStart = 30.dp, topEnd = 30.dp))
-					.background(Color.Gray)
+					.background(MaterialTheme.colors.surface)
 					.padding(10.dp),
 				horizontalAlignment = Alignment.CenterHorizontally,
 				verticalArrangement = Arrangement.Center
 
 			) {
 				Text(
-					text = "Sign Up",
+					text = stringResource(id = R.string.signUp),
 					fontSize = 30.sp,
-					style = TextStyle(
-						fontWeight = FontWeight.Bold,
-						letterSpacing = 2.sp
-					)
+					style = MaterialTheme.typography.h2,
+					color = MaterialTheme.colors.onPrimary
 				)
 				Column(
 					modifier = Modifier
@@ -101,12 +99,24 @@ fun RegisterPage(navController : NavController) {
 								keyboardType = KeyboardType.Email
 							),
 							onValueChange = { emailValue.value = it },
-							label = { Text(text = "Email Address", color = Color.Black) },
-							placeholder = { Text(text = "Email Address", color = Color.Black) },
+							label = {
+								Text(
+									text = "Email Address",
+									color = MaterialTheme.colors.onPrimary
+								)
+							},
+							placeholder = {
+								Text(
+									text = "Email Address",
+									color = MaterialTheme.colors.secondaryVariant
+								)
+							},
 							singleLine = true,
 							modifier = Modifier
 								.fillMaxWidth(0.8f)
-								.focusRequester(focusRequester = focusRequester)
+								.focusRequester(focusRequester = focusRequester),
+							textStyle = TextStyle(color = MaterialTheme.colors.onPrimary)
+
 						)
 
 						OutlinedTextField(
@@ -115,8 +125,18 @@ fun RegisterPage(navController : NavController) {
 							keyboardOptions = KeyboardOptions(
 								keyboardType = KeyboardType.Password
 							),
-							label = { Text(text = "Password", color = Color.Black) },
-							placeholder = { Text(text = "Password", color = Color.Black) },
+							label = {
+								Text(
+									text = "Password",
+									color = MaterialTheme.colors.onPrimary
+								)
+							},
+							placeholder = {
+								Text(
+									text = "Password",
+									color = MaterialTheme.colors.onPrimary
+								)
+							},
 							singleLine = true,
 							modifier = Modifier
 								.fillMaxWidth(0.8f)
@@ -128,13 +148,16 @@ fun RegisterPage(navController : NavController) {
 									Icon(
 										imageVector = ImageVector.vectorResource(id = R.drawable.password_eye),
 										contentDescription = "",
-										tint = if (passwordVisibility.value) primaryColor else Color.Black
+										tint = if (passwordVisibility.value) primaryColor
+										else MaterialTheme.colors.onPrimary
 									)
 
 								}
 							},
 							visualTransformation = if (passwordVisibility.value) VisualTransformation.None
-							else PasswordVisualTransformation()
+							else PasswordVisualTransformation(),
+							textStyle = TextStyle(color = MaterialTheme.colors.onPrimary)
+
 						)
 						//confirmPassword
 						OutlinedTextField(
@@ -143,8 +166,18 @@ fun RegisterPage(navController : NavController) {
 							keyboardOptions = KeyboardOptions(
 								keyboardType = KeyboardType.Password
 							),
-							label = { Text(text = "Confirm Password", color = Color.Black) },
-							placeholder = { Text(text = "Confirm Password", color = Color.Black) },
+							label = {
+								Text(
+									text = "Confirm Password",
+									color = MaterialTheme.colors.onPrimary
+								)
+							},
+							placeholder = {
+								Text(
+									text = "Confirm Password",
+									color = MaterialTheme.colors.onPrimary
+								)
+							},
 							singleLine = true,
 							modifier = Modifier.fillMaxWidth(0.8f),
 							trailingIcon = {
@@ -155,14 +188,17 @@ fun RegisterPage(navController : NavController) {
 									Icon(
 										imageVector = ImageVector.vectorResource(id = R.drawable.password_eye),
 										contentDescription = "",
-										tint = if (confirmPasswordVisibility.value) primaryColor else Color.Black
+										tint = if (confirmPasswordVisibility.value) primaryColor
+										else MaterialTheme.colors.onPrimary
 
 									)
 
 								}
 							},
 							visualTransformation = if (confirmPasswordVisibility.value) VisualTransformation.None
-							else PasswordVisualTransformation()
+							else PasswordVisualTransformation(),
+							textStyle = TextStyle(color = MaterialTheme.colors.onPrimary)
+
 						)
 						Spacer(modifier = Modifier.padding(10.dp))
 						Button(

@@ -28,10 +28,7 @@ import com.google.accompanist.permissions.ExperimentalPermissionsApi
 fun Menu(sharedPreferences : SharedPreferences) {
 	val context : Context = LocalContext.current
 	val temaInicial = isSystemInDarkTheme()
-	val isDark = rememberSaveable { mutableStateOf(temaInicial) }
-	SecurePhoneAppTheme(isDark.value) {
-		
-	}
+
 	getAndroidId(context)
 	//val context = LocalContext.current
 

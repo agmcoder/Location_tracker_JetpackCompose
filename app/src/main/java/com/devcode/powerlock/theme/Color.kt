@@ -11,3 +11,4 @@ val whiteBackground = Color(0xFFF7F7F7)
 val blackBackground = Color.Black
 val whiteTextColor = Color.White
 val blackTextColor =Color.Black
+val placeHolderTextColor = Color(0xFF7C7878)
