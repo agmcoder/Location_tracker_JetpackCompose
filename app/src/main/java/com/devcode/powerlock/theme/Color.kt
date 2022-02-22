@@ -8,3 +8,6 @@ val Purple700 = Color(0xFF3700B3)
 val Teal200 = Color(0xFF03DAC5)
 val primaryColor = Color(0xFF7048B6)
 val whiteBackground = Color(0xFFF7F7F7)
+val blackBackground = Color.Black
+val whiteTextColor = Color.White
+val blackTextColor =Color.Black

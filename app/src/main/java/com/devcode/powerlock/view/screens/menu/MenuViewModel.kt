@@ -1,11 +1,9 @@
 package com.devcode.powerlock.view.screens.menu
 
 import android.content.Context
-import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.preferencesDataStore
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.devcode.powerlock.data.network.LocationServices
+import com.devcode.powerlock.data.networkprovider.LocationServices
 import com.devcode.powerlock.model.getAndroidId
 import com.devcode.powerlock.model.getGPSStateFirebase
 import com.devcode.powerlock.model.saveLocation
@@ -18,10 +16,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
-import java.util.prefs.Preferences
 import javax.inject.Inject
-import javax.inject.Singleton
-
 
 @HiltViewModel
 class MenuViewModel @Inject constructor(private val locationServices : LocationServices) :
@@ -45,7 +40,7 @@ private fun getGPSStateViewModel() {
 
 		}
 	}
-	fun setGPSSTATEviewModel(state:Boolean) {
+	fun setGPSStateViewModel(state:Boolean) {
 		viewModelScope.launch(IO) {
 			if (!checkIfGPSStateIsTheSame(state))
 				setGPSStateFirebase(state)

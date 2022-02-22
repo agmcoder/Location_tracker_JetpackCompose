@@ -1,4 +1,4 @@
-package com.devcode.powerlock.data.network
+package com.devcode.powerlock.data.networkprovider
 
 import android.annotation.SuppressLint
 import android.content.Context

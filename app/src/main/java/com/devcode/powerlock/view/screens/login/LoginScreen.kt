@@ -1,220 +1,311 @@
 package com.devcode.powerlock.view.screens.login
 
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
+import android.annotation.SuppressLint
+import android.content.SharedPreferences
+import android.widget.Toast
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.ClickableText
 import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowForward
-import androidx.compose.material.icons.filled.Lock
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusDirection
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusOrder
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
-import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.devcode.powerlock.R
-import com.devcode.powerlock.view.components.RoundedButton
-import com.devcode.powerlock.view.components.TransparentTextField
+import com.devcode.powerlock.data.firebaseprovider.LoginDeviceState
+import com.devcode.powerlock.model.loginChecker
+import com.devcode.powerlock.theme.primaryColor
+import com.devcode.powerlock.view.components.CustomSpacer
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 
-
+@SuppressLint("CommitPrefEdits", "NewApi")
+@ExperimentalPermissionsApi
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
-fun LoginScreen() {
-
-	val emailValue = rememberSaveable{ mutableStateOf("") }
-	val passwordValue = rememberSaveable{ mutableStateOf("") }
-	var passwordVisibility by remember { mutableStateOf(false) }
+fun LoginPage(
+	navController : NavController,
+	sharedPreferences : SharedPreferences
+) {
+	val ed = sharedPreferences.edit()
+	val coroutineScope = rememberCoroutineScope()
+	val rememberUser = sharedPreferences.getString("user", "")
+	val rememberPassword = sharedPreferences.getString("password", "")
+	val initialCheckBoxState = sharedPreferences.getBoolean("rememberUser", false)
+	val checkBoxState = rememberSaveable { mutableStateOf(initialCheckBoxState) }
+	val (emailRequest, passwordRequest) = FocusRequester.createRefs()
+	//val image = imageResource(id= R.drawable.logo)
+	val context = LocalContext.current
+	val image = painterResource(R.drawable.logo2)
+	val emailValue : MutableState<String>
+	val passwordValue : MutableState<String>
+	val passwordVisibility = remember { mutableStateOf(false) }
+	val scrollState = rememberScrollState()
 	val focusManager = LocalFocusManager.current
 
-	Box(
+
+
+	emailValue = if (rememberUser != null && checkBoxState.value) {
+		rememberSaveable { mutableStateOf(rememberUser) }
+
+	} else
+		rememberSaveable { mutableStateOf("") }
+
+
+	passwordValue = if (rememberPassword != null && checkBoxState.value) {
+		rememberSaveable { mutableStateOf(rememberPassword) }
+
+	} else
+		rememberSaveable { mutableStateOf("") }
+
+	//we start to implement login screen UI-->
+
+	Column(
 		modifier = Modifier
 			.fillMaxSize()
-			.background(MaterialTheme.colors.background)
-	){
-		Image(
-			painter = painterResource(id = R.drawable.logo),
-			contentDescription = "Login Image",
-			contentScale = ContentScale.Inside
-		)
+			.clickable { focusManager.clearFocus() },
+		horizontalAlignment = Alignment.CenterHorizontally
+	) {
 
-		Box(
-			modifier = Modifier.fillMaxSize(),
-			contentAlignment = Alignment.BottomCenter
-		){
-			ConstraintLayout {
+		Box(//this is the logo box
+			modifier = Modifier
+				.fillMaxHeight(0.3f)
+				.background(Color.White), contentAlignment =
+			Alignment.Center
 
-				val (surface, fab) = createRefs()
+		) {
 
-				Surface(
-					modifier = Modifier
-						.fillMaxWidth()
-						.height(400.dp)
-						.constrainAs(surface) {
-							bottom.linkTo(parent.bottom)
+			Image(
+				painter = image, contentDescription = "logo",
+				alignment = Alignment.Center,
+				modifier = Modifier.fillMaxSize()
+			)
+
+		}
+		Column(
+			horizontalAlignment = Alignment.CenterHorizontally,
+			modifier =
+			Modifier
+				.fillMaxSize()
+				.clip(RoundedCornerShape(topEnd = 30.dp, topStart = 30.dp))
+				.background(Color.Gray)
+
+		) {
+
+			Text(
+				modifier = Modifier.padding(5.dp),
+				text = "Sign In",
+				style = TextStyle(
+					fontWeight = FontWeight.Bold,
+					letterSpacing = 2.sp
+				),
+
+				fontSize = 30.sp
+			)
+
+			Column(
+				horizontalAlignment = Alignment.CenterHorizontally,
+				verticalArrangement = Arrangement.Center,
+				modifier = Modifier
+					.fillMaxSize()
+					.padding(10.dp)
+					.verticalScroll(scrollState)
+
+			) {
+
+				Spacer(modifier = Modifier.padding(20.dp))
+
+
+
+
+				Column(horizontalAlignment = Alignment.CenterHorizontally)
+				{
+					OutlinedTextField(//USER
+
+						keyboardOptions = KeyboardOptions(
+							keyboardType = KeyboardType.Email,
+							imeAction = ImeAction.Next
+						),
+						keyboardActions = KeyboardActions(onNext = {
+							focusManager.moveFocus(
+								FocusDirection.Next
+							)
+						}),
+						value = emailValue.value,
+						onValueChange = {
+							emailValue.value = it
 						},
-					color = Color.White,
-					shape = RoundedCornerShape(
-						topStartPercent = 8,
-						topEndPercent = 8
-					)
-				){
-					Column(
-						modifier = Modifier
-							.fillMaxWidth()
-							.padding(16.dp),
-						verticalArrangement = Arrangement.SpaceEvenly
-					){
-						Text(
-							text = "Welcome Back!",
-							style = MaterialTheme.typography.h4.copy(
-								fontWeight = FontWeight.Medium
-							)
-						)
-
-						Text(
-							text = "Login to your Account",
-							style = MaterialTheme.typography.h5.copy(
-								color = MaterialTheme.colors.primary
-							)
-						)
-
-						Column(
-							modifier = Modifier
-								.fillMaxWidth()
-								.padding(horizontal = 16.dp),
-							horizontalAlignment = Alignment.CenterHorizontally,
-							verticalArrangement = Arrangement.spacedBy(8.dp)
-						){
-							TransparentTextField(
-								textFieldValue = emailValue,
-								textLabel = "Email",
-								keyboardType = KeyboardType.Email,
-								keyboardActions = KeyboardActions(
-									onNext = {
-										focusManager.moveFocus(FocusDirection.Down)
-									}
-								),
-								imeAction = ImeAction.Next
-							)
-
-							TransparentTextField(
-								textFieldValue = passwordValue,
-								textLabel = "Password",
-								keyboardType = KeyboardType.Password,
-								keyboardActions = KeyboardActions(
-									onDone = {
-										focusManager.clearFocus()
-
-										//TODO("LOGIN")
-									}
-								),
-								imeAction = ImeAction.Done,
-								trailingIcon = {
-									IconButton(
-										onClick = {
-											passwordVisibility = !passwordVisibility
-										}
-									) {
-										Icon(
-											imageVector = if(passwordVisibility) {
-												Icons.Default.Lock
-											} else {
-												Icons.Default.Lock
-											},
-											contentDescription = "Toggle Password Icon"
-										)
-									}
-								},
-								visualTransformation = if(passwordVisibility) {
-									VisualTransformation.None
-								} else {
-									PasswordVisualTransformation()
-								}
-							)
-
+						label = {
 							Text(
-								modifier = Modifier.fillMaxWidth(),
-								text = "Forgot Password?",
-								style = MaterialTheme.typography.body1,
-								textAlign = TextAlign.End
+								text = "Email Address",
+								color = Color.Black
 							)
-						}
-
-						Column(
-							modifier = Modifier.fillMaxWidth(),
-							horizontalAlignment = Alignment.CenterHorizontally,
-							verticalArrangement = Arrangement.spacedBy(8.dp)
-						) {
-							RoundedButton(
-								text = "Login",
-								displayProgressBar = false,
-								onClick = {
-									// TODO("LOGIN")
-								}
-							)
-
-							ClickableText(
-								text = buildAnnotatedString {
-									append("Do not have an Account?")
-
-									withStyle(
-										style = SpanStyle(
-											color = MaterialTheme.colors.primary,
-											fontWeight = FontWeight.Bold
-										)
-									){
-										append("Sign up")
-									}
-								}
-							){
-								// TODO("NAVIGATE TO REGISTER SCREEN")
-							}
-						}
-					}
-				}
-
-				FloatingActionButton(
-					modifier = Modifier
-						.size(72.dp)
-						.constrainAs(fab) {
-							top.linkTo(surface.top, margin = (-36).dp)
-							end.linkTo(surface.end, margin = 36.dp)
 						},
-					backgroundColor = MaterialTheme.colors.primary,
-					onClick = {}
-				) {
-					Icon(
-						modifier = Modifier.size(42.dp),
-						imageVector = Icons.Default.ArrowForward,
-						contentDescription = "Forward Icon",
-						tint = Color.White
+						placeholder = { Text(text = "Email Address", color = Color.Black) },
+						singleLine = true,
+						modifier = Modifier
+							.fillMaxWidth(0.8f)
+							.focusable()
+							.focusOrder(emailRequest) { next = passwordRequest }
+
 					)
 				}
+
+
+
+				OutlinedTextField(
+
+					value = passwordValue.value,
+					keyboardOptions = KeyboardOptions(
+						keyboardType = KeyboardType.Password
+					),
+					keyboardActions = KeyboardActions(),
+					onValueChange = { passwordValue.value = it },
+					trailingIcon = {
+						IconButton(onClick = {
+							passwordVisibility.value = !passwordVisibility.value
+						}) {
+
+							Icon(
+								imageVector = ImageVector.vectorResource(
+									id = R.drawable.password_eye
+								),
+								contentDescription = "",
+								tint = if (passwordVisibility.value)
+									primaryColor else Color.Black
+
+							)
+
+						}
+					},
+					label = { Text(text = "Password", color = Color.Black) },
+					placeholder = { Text(text = "Password", color = Color.Black) },
+					singleLine = true,
+					visualTransformation = if (passwordVisibility.value) VisualTransformation.None
+					else PasswordVisualTransformation(),
+					modifier = Modifier
+						.fillMaxWidth(0.8f)
+						.focusable()
+
+					//onImeActionPerformed = { _, controller ->
+					//controller?.hideSoftwareKeyboard()
+					//}
+
+				)
+
+
+
+				Spacer(modifier = Modifier.padding(10.dp))
+				Button(
+					onClick = {
+						coroutineScope.launch {
+							loginChecker(
+								emailValue,
+								passwordValue,
+								context,
+								ed
+							).collect {
+								when (it) {
+									LoginDeviceState.OBSERVER -> navController.navigate("map_page")
+									LoginDeviceState.EMITTER -> navController.navigate("menu_page")
+									LoginDeviceState.ERROR -> Toast.makeText(
+										context,
+										"Authentication failed.",
+										Toast.LENGTH_SHORT
+									).show()
+								}
+							}
+
+						}
+
+					},
+					modifier = Modifier
+						.fillMaxWidth(0.8f)
+						.height(50.dp)
+				) {
+					Text(text = "Sign In", fontSize = 20.sp)
+				}
+
+
+				CustomSpacer()
+				Row(
+					modifier = Modifier.fillMaxWidth(),
+					horizontalArrangement = Arrangement.Center
+				) {
+					Text(
+						text = "remember user and password?"
+					)
+					Checkbox(checked = checkBoxState.value,
+						onCheckedChange =
+						{
+							checkBoxState.value = it
+							if (!checkBoxState.value) {
+								ed.putString("user", "")
+								ed.putString("password", "")
+								ed.apply()
+							}
+							ed.putBoolean("rememberUser", checkBoxState.value)
+							ed.apply()
+
+						}
+					)
+
+				}
+				CustomSpacer()
+				Text(
+					text = "Create An Account",
+					modifier = Modifier.clickable(onClick = {
+						navController.navigate("register_page") {
+							//popUpTo = navController.graph.startDestination
+							//launchSingleTop = true
+						}
+					})
+				)
+
+
+				CustomSpacer()
+
 			}
 		}
 	}
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

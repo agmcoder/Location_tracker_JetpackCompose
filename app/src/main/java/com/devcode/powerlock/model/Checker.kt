@@ -3,21 +3,21 @@ package com.devcode.powerlock.model
 import android.content.Context
 import android.content.SharedPreferences
 import android.widget.Toast
-import androidx.activity.ComponentActivity
 import androidx.compose.runtime.MutableState
 import androidx.navigation.NavController
-import com.devcode.powerlock.data.network.LoginDeviceState
+import com.devcode.powerlock.data.firebaseprovider.LoginDeviceState
 import com.devcode.powerlock.data.network.LoginResult
 import com.google.firebase.firestore.FirebaseFirestore
 import com.orhanobut.logger.Logger
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.tasks.await
 
+//in this kotlin file we are going to check if outlinedTextfields
+// are right in our loginScreen and registerScreen
 suspend fun loginChecker(
 	emailValue : MutableState<String>,
 	passwordValue : MutableState<String>,
 	context : Context,
-	navController : NavController,
 	ed : SharedPreferences.Editor
 ) = flow {
 	if (emailValue.value.isEmpty() ||
@@ -28,10 +28,10 @@ suspend fun loginChecker(
 			Toast.LENGTH_SHORT
 		).show()
 	} else {
-		com.orhanobut.logger.Logger.i("else del boton signup")
+		Logger.i("else del boton signup")
 		//var userMail : String = emailValue.value
 		//var userPassword : String = passwordValue.value
-		when(login(context, emailValue.value, passwordValue.value, ed)) {
+		when (login(context, emailValue.value, passwordValue.value, ed)) {
 			is LoginResult.Success -> {
 				FirebaseFirestore.getInstance().collection("phones").document(
 					getFirebaseID()
@@ -43,8 +43,11 @@ suspend fun loginChecker(
 
 						}
 
-						if (documentSnapShot.getString("androidID").equals(getAndroidId(context))) emit(LoginDeviceState.EMITTER) else emit(LoginDeviceState.OBSERVER)
-
+						if (documentSnapShot.getString("androidID")
+								.equals(getAndroidId(context))
+						)
+							emit(LoginDeviceState.EMITTER)
+						else emit(LoginDeviceState.OBSERVER)
 
 					}
 			}
@@ -62,7 +65,7 @@ fun registerChecker(
 	navController : NavController,
 	emailValue : MutableState<String>,
 	passwordValue : MutableState<String>,
-	confirmPasswordValue :MutableState<String>
+	confirmPasswordValue : MutableState<String>
 ) {
 	if (emailValue.value.isEmpty() ||
 		passwordValue.value.isEmpty() ||

@@ -63,7 +63,7 @@ fun GPSPowerButton(
 
 				}
 			}
-			menuViewModel.setGPSSTATEviewModel(buttonState.value)
+			menuViewModel.setGPSStateViewModel(buttonState.value)
 
 		}
 		//modifier = Modifier.background()

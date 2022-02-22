@@ -1,4 +1,4 @@
-package com.devcode.powerlock.data.network
+package com.devcode.powerlock.data.firebaseprovider
 
 enum class LoginDeviceState {
 	OBSERVER,

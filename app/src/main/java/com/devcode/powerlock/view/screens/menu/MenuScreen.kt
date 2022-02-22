@@ -8,6 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavController
 import com.devcode.powerlock.view.MenuToolbar
 import com.devcode.powerlock.view.components.FloatingButtonGPS
+import com.devcode.powerlock.view.screens.menu.Menu
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 
 @RequiresApi(Build.VERSION_CODES.Q)
