@@ -2,7 +2,7 @@ package com.devcode.powerlock.view.screens.map
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.devcode.powerlock.model.latLngSnapshotObserver
+import com.devcode.powerlock.data.firebaseprovider.latLngSnapshotObserver
 import com.google.android.libraries.maps.model.LatLng
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers.IO

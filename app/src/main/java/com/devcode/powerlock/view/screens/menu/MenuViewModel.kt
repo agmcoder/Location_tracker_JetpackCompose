@@ -3,11 +3,12 @@ package com.devcode.powerlock.view.screens.menu
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.devcode.powerlock.data.firebaseprovider.getGPSStateFirebase
+import com.devcode.powerlock.data.firebaseprovider.saveLocation
+import com.devcode.powerlock.data.firebaseprovider.setGPSStateFirebase
 import com.devcode.powerlock.data.networkprovider.LocationServices
 import com.devcode.powerlock.model.getAndroidId
-import com.devcode.powerlock.model.getGPSStateFirebase
-import com.devcode.powerlock.model.saveLocation
-import com.devcode.powerlock.model.setGPSStateFirebase
+
 import com.google.android.libraries.maps.model.LatLng
 import com.orhanobut.logger.Logger
 import dagger.hilt.android.lifecycle.HiltViewModel

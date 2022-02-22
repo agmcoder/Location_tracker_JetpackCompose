@@ -29,7 +29,7 @@ class LocationServices @Inject constructor(@ApplicationContext private val conte
 			fusedLocationProviderClient = LocationServices
 				.getFusedLocationProviderClient(context)
 			locationRequest = LocationRequest.create().apply {
-				interval = 3000
+				interval = 1000
 				fastestInterval = 3000
 				priority = LocationRequest.PRIORITY_HIGH_ACCURACY
 

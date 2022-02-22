@@ -20,8 +20,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.devcode.powerlock.R
+import com.devcode.powerlock.data.firebaseprovider.getFirebaseID
 import com.devcode.powerlock.model.getAndroidId
-import com.devcode.powerlock.model.getFirebaseID
 import com.devcode.powerlock.theme.whiteBackground
 import com.devcode.powerlock.view.Divisor
 import com.devcode.powerlock.view.MenuToolbar
