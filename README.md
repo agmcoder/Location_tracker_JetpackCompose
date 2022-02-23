@@ -1,2 +1,2 @@
 # location tracker app
-jetpack compose para crear una app de seguridad anti-robo de dispositivo movil
+This application is build in Android Studio with Kotlin and Jetpack Compose. you can practice and learn with this project how we can work with a clean code filosofy and layer structure.
