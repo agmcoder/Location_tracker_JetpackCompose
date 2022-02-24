@@ -8,8 +8,6 @@ import androidx.compose.foundation.*
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyListState
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
@@ -20,8 +18,6 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusDirection
-import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.input.pointer.pointerInput
@@ -313,7 +309,7 @@ fun LoginPage(
 	}
 }
 //it is not used jet but i am working to use it an reuse code.
-@SuppressLint("CoroutineCreationDuringComposition")
+/*@SuppressLint("CoroutineCreationDuringComposition")
 @Composable
 fun PressButton(
 	emailValue : MutableState<String>,
@@ -343,7 +339,7 @@ fun PressButton(
 
 	}
 
-}
+}*/
 
 
 
