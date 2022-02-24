@@ -8,6 +8,8 @@ import androidx.compose.foundation.*
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
@@ -17,8 +19,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
@@ -54,18 +58,13 @@ fun LoginPage(
 	val coroutineScope = rememberCoroutineScope()
 	val ed = sharedPreferences.edit()
 	val checkBoxState = rememberSaveable { mutableStateOf(false) }
-	val (emailRequest, passwordRequest) = FocusRequester.createRefs()
 	val context = LocalContext.current
 	val image = painterResource(R.drawable.logo2)
 	val emailValue = rememberSaveable { mutableStateOf("") }
 	val passwordValue = rememberSaveable { mutableStateOf("") }
 	val passwordVisibility = remember { mutableStateOf(false) }
-	val scrollState = rememberScrollState()
 	val focusManager = LocalFocusManager.current
-	val focusRequester = FocusRequester()
-
 	//we start to implement login screen UI-->
-
 	Column(
 		modifier = Modifier
 			.fillMaxSize()
@@ -87,7 +86,6 @@ fun LoginPage(
 				.fillMaxHeight(0.3f)
 				.background(MaterialTheme.colors.background),
 			contentAlignment = Alignment.Center
-
 		) {
 
 			Image(
@@ -99,9 +97,8 @@ fun LoginPage(
 		}
 		LazyColumn(
 			verticalArrangement = Arrangement.Center,
-			horizontalAlignment = Alignment.CenterHorizontally
+			horizontalAlignment = Alignment.CenterHorizontally,
 		) {
-
 			item {
 				Text(
 					modifier = Modifier.padding(5.dp),
@@ -111,15 +108,10 @@ fun LoginPage(
 
 				)
 			}
-
-
 			item {
 
 				Spacer(modifier = Modifier.padding(20.dp))
 			}
-
-
-
 			item {
 				OutlinedTextField(
 
@@ -129,6 +121,10 @@ fun LoginPage(
 						keyboardType = KeyboardType.Password
 					),
 					keyboardActions = KeyboardActions(
+						onNext ={
+							focusManager.moveFocus(FocusDirection.Down)
+						}
+
 					),
 					onValueChange = { emailValue.value = it },
 
@@ -147,13 +143,24 @@ fun LoginPage(
 					singleLine = true,
 					modifier = Modifier
 						.fillMaxWidth(0.8f)
-						.focusRequester(focusRequester = focusRequester),
+						.focusable(),
 					textStyle = TextStyle(color = MaterialTheme.colors.onPrimary)
 
 				)
-			}
-			item {
+
+
 				OutlinedTextField(
+					modifier = Modifier
+						.focusable()
+						.fillMaxWidth(0.8f)
+						.onFocusChanged {
+							Toast
+								.makeText(
+									context, if (it.isFocused) "focused"
+									else "not focused", Toast.LENGTH_SHORT
+								)
+								.show()
+						},
 
 					value = passwordValue.value,
 					keyboardOptions = KeyboardOptions(
@@ -218,9 +225,6 @@ fun LoginPage(
 					singleLine = true,
 					visualTransformation = if (passwordVisibility.value) VisualTransformation.None
 					else PasswordVisualTransformation(),
-					modifier = Modifier
-						.fillMaxWidth(0.8f)
-						.focusRequester(focusRequester),
 					textStyle = TextStyle(color = MaterialTheme.colors.onPrimary)
 
 				)
