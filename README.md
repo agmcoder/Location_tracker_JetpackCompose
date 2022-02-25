@@ -1,9 +1,5 @@
-
-# location tracker app
-This application is build in Android Studio with Kotlin and Jetpack Compose. you can practice and learn with this project how we can work with a clean code filosofy and layer structure.
-
 # location tracker app with Jetpack Compose
-### this application is build in Android Studio with Kotlin and Jetpack Compose.you can practice and learn with this project how we can work with a clean code filosofy and layer structure.
+### this application is build in Android Studio with Kotlin and Jetpack Compose. You can practice and learn with this project how we can work with a clean code filosofy and layer structure.
 ## MVVM
 ### this application is build in MVVM pattern with differente layers. you can learn with this project how you must structure  your code.
 <p>
