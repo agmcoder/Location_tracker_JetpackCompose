@@ -6,12 +6,12 @@
 <img src="https://user-images.githubusercontent.com/100163682/155343869-32d2af3d-43d4-4825-8b67-3be5a9a9538f.png" width="40%" height="20%"/>
 </p>
 <h2> Data-Flow</h2>
-<h3> we have to design the data-flow in a layer structure MVVM as this one.</h3>
+<h3> We have to design the data-flow in a layer structure MVVM as this one.</h3>
 <p>
 <img src="https://user-images.githubusercontent.com/100163682/155344305-8b9cd0c6-d1b2-4fa1-bd89-5fcf881eb0cf.png" width="80%" height="40%"/>
   </p>
 <h2> Navigation-Flow</h2>
-<h3> with this projecto you can learn another subject. this one is a correctly data-flow, how aor app´s screens will navigate between them-self.</h3>
+<h3> With this project you can learn another subject. This one is a correctly data-flow and this is how our app´s screens will navigate between them-self.</h3>
 <p>
 <img src="https://user-images.githubusercontent.com/100163682/155346383-db8d866f-d346-4fea-840d-c6a0b70a0524.png" width="50%" height="50%"/>
 </p>
